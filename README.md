@@ -43,10 +43,9 @@ Mettre `cv.pdf` dans `public/`, puis dans `src/data/site.ts` : `cvUrl: '/cv.pdf'
 ```bash
 git add .
 git commit -m "Ajout projet X"
-git push
+git push          # sauvegarde le code source
+npm run deploy    # construit le site et le met en ligne (~1 minute)
 ```
-
-Le site est reconstruit et mis en ligne en ~1 minute (onglet **Actions** du dépôt).
 
 ## Travailler en local
 
