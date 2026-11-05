@@ -1,0 +1,864 @@
+---
+import TitleBlock from './TitleBlock.astro';
+import HeroDrawing from './HeroDrawing.astro';
+import ProjectCard from './ProjectCard.astro';
+import { ui, profile, timeline, expertise, tools, type Lang } from '../data/site';
+import { projects, categories, type Category } from '../data/projects';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang];
+const usedCats = [...new Set(projects.map((p) => p.category))] as Category[];
+const marquee =
+  lang === 'fr'
+    ? ['Chauffage', 'Ventilation', 'Climatisation', 'BIM', 'Revit', 'Bilans thermiques', 'Schémas de principe', 'pyRevit']
+    : ['Heating', 'Ventilation', 'Air conditioning', 'BIM', 'Revit', 'Heat loads', 'Schematics', 'pyRevit'];
+---
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="wrap hero__grid">
+    <div class="hero__text">
+      <p class="mono hero__plate" data-hero-item>
+        <span class="pulse" aria-hidden="true"></span>{t.hero.plate}
+      </p>
+      <h1 class="hero__name">
+        <span class="line"><span data-hero-line>{profile.firstName}</span></span>
+        <span class="line"><span data-hero-line class="outline">{profile.lastName}</span></span>
+      </h1>
+      <p class="hero__role" data-hero-item>
+        <strong>{t.hero.role}</strong>
+        <span>{t.hero.at} <em>{profile.company}</em></span>
+      </p>
+      <p class="hero__intro" data-hero-item>{t.hero.intro}</p>
+      <div class="hero__cta" data-hero-item>
+        <a class="btn btn--solid" href="#realisations">
+          {t.hero.ctaWorks}
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" /></svg>
+        </a>
+        <a class="btn" href={profile.cvUrl} target="_blank" rel="noopener">
+          {t.hero.ctaCv}
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7zM14 3v5h5M10 14l3 3 3-3M13 10v7" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+        </a>
+      </div>
+    </div>
+    <div class="hero__art" data-hero-art>
+      <HeroDrawing supply={t.hero.supply} ret={t.hero.ret} caption={lang === 'fr' ? 'Fig. 1 — CTA double flux, schéma de principe' : 'Fig. 1 — Dual-flow AHU, schematic'} />
+    </div>
+  </div>
+  <div class="wrap hero__foot">
+    <span class="mono"><span class="loc-dot" aria-hidden="true"></span>{profile.location[lang]}</span>
+    <span class="mono scrollcue" aria-hidden="true">{t.hero.scroll} <i></i></span>
+  </div>
+</section>
+
+<!-- ============ MARQUEE (moves with scroll) ============ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track" data-marquee>
+    {[0, 1, 2].map(() => marquee.map((w, i) => <span class:list={['marquee__w', { o: i % 2 }]}>{w}<b>✕</b></span>))}
+  </div>
+</div>
+
+<!-- ============ EVERYTHING BELOW IS CONNECTED BY THE SCROLL "DUCT" ============ -->
+<div class="duct-zone" data-duct-zone>
+  <svg class="duct" data-duct aria-hidden="true">
+    <defs>
+      <linearGradient id="ductGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1000" data-duct-grad>
+        <stop offset="0" style="stop-color: var(--cool)" />
+        <stop offset="0.55" stop-color="#a78bfa" />
+        <stop offset="1" style="stop-color: var(--warm)" />
+      </linearGradient>
+      <mask id="ductMask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
+        <path data-duct-maskpath fill="none" stroke="#fff" stroke-width="12" />
+      </mask>
+    </defs>
+    <path class="duct__base" data-duct-base />
+    <path class="duct__body" data-duct-body stroke="url(#ductGrad)" />
+    <path class="duct__flow" data-duct-flow mask="url(#ductMask)" />
+    <g data-duct-branches></g>
+    <circle class="duct__head" data-duct-head r="5" />
+  </svg>
+
+  <!-- ===== Key figures ===== -->
+  <section class="stats wrap" aria-label={t.stats.title}>
+    <ul class="stats__row">
+      {t.stats.items.map((s) => (
+        <li class="stat" data-reveal>
+          <span class="stat__v"><span data-count={s.value}>{s.value}</span>{s.suffix}</span>
+          <span class="stat__l">{s.label}</span>
+          <span class="mono">{s.note}</span>
+        </li>
+      ))}
+      <li class="stat" data-reveal>
+        <span class="stat__v"><span data-count={projects.length}>{projects.length}</span></span>
+        <span class="stat__l">{t.stats.projects}</span>
+        <span class="mono">Portfolio</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ===== Expertise ===== -->
+  <section class="section" id="expertise" data-section>
+    <div class="wrap">
+      <div data-duct-node><TitleBlock {...t.sections.expertise} /></div>
+      <table class="sched">
+        <caption class="sr-only">{t.sections.expertise.sub}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{t.table.ref}</th>
+            <th scope="col">{t.table.domain}</th>
+            <th scope="col">{t.table.desc}</th>
+            <th scope="col">{t.table.tools}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {expertise.map((e) => (
+            <tr data-reveal>
+              <td class="sched__ref mono">{e.ref}</td>
+              <th scope="row" class="sched__t">{e.title[lang]}</th>
+              <td class="sched__d">{e.desc[lang]}</td>
+              <td><div class="chips">{e.tools.map((x) => <span class="chip">{x}</span>)}</div></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===== Works ===== -->
+  <section class="section" id="realisations" data-section>
+    <div class="wrap">
+      <div data-duct-node><TitleBlock {...t.sections.works} scale="1:100" /></div>
+      <div class="filters" role="group" aria-label={lang === 'fr' ? 'Filtrer les projets' : 'Filter projects'} data-reveal>
+        <button type="button" class="filter" aria-pressed="true" data-filter="all">{t.filters.all}<sup>{projects.length}</sup></button>
+        {usedCats.map((c) => (
+          <button type="button" class="filter" aria-pressed="false" data-filter={c}>
+            {categories[c][lang]}<sup>{projects.filter((p) => p.category === c).length}</sup>
+          </button>
+        ))}
+      </div>
+      <ul class="grid" data-grid>
+        {projects.map((p, i) => <ProjectCard p={p} lang={lang} index={i} />)}
+      </ul>
+      <p class="empty mono" data-empty hidden>{t.works.empty}</p>
+      <p class="sr-only" aria-live="polite" data-filter-status></p>
+    </div>
+  </section>
+
+  <!-- ===== Career ===== -->
+  <section class="section" id="parcours" data-section>
+    <div class="wrap">
+      <div data-duct-node><TitleBlock {...t.sections.path} /></div>
+      <ol class="tl">
+        {timeline.map((it) => (
+          <li class:list={['tl__it', it.kind, { cur: it.current }]} data-reveal>
+            <div class="tl__when mono">{it.period[lang]}</div>
+            <div class="tl__node" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 6l16 12V6L4 18z" /></svg>
+            </div>
+            <div class="tl__body">
+              <span class="mono tl__kind">{it.kind === 'work' ? (lang === 'fr' ? 'Expérience' : 'Experience') : (lang === 'fr' ? 'Formation' : 'Education')}</span>
+              <h3>{it.title[lang]}</h3>
+              <p class="tl__org">{it.org}{it.place && <span> · {it.place}</span>}</p>
+              {it.points && (
+                <ul class="tl__pts">
+                  {it.points[lang].map((x) => <li>{x}</li>)}
+                </ul>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== Tools ===== -->
+  <section class="section section--tight" id="outils" data-section>
+    <div class="wrap">
+      <div data-duct-node><TitleBlock {...t.sections.tools} /></div>
+      <ul class="tools">
+        {tools.map((x) => (
+          <li class="tool" data-reveal>
+            <span class="tool__code">{x.code}</span>
+            <span class="tool__name">{x.name}</span>
+            <span class="mono">{x.note[lang]}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== Contact ===== -->
+  <section class="section" id="contact" data-section>
+    <div class="wrap">
+      <div data-duct-node><TitleBlock {...t.sections.contact} /></div>
+      <div class="contact">
+        <p class="contact__lead" data-reveal>{t.contact.lead}</p>
+        <div class="contact__mail" data-reveal>
+          <a href={`mailto:${profile.email}`} class="contact__email">{profile.email}</a>
+          <button type="button" class="btn" data-copy={profile.email} data-copied={t.contact.copied} data-copyfail={t.contact.copyFail}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="1" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="M16 8V4H4v12h4" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+            <span data-copy-label>{t.contact.copy}</span>
+          </button>
+        </div>
+        <p class="sr-only" aria-live="polite" data-copy-status></p>
+        <dl class="contact__grid" data-reveal>
+          <div>
+            <dt class="mono">{t.contact.linkedin}</dt>
+            <dd><a href={profile.linkedin} target="_blank" rel="noopener">adithyan-sanal-kumar ↗</a></dd>
+          </div>
+          <div>
+            <dt class="mono">{t.contact.cv}</dt>
+            <dd><a href={profile.cvUrl} target="_blank" rel="noopener">{t.contact.cvLabel} ↗</a></dd>
+          </div>
+          <div>
+            <dt class="mono">{t.contact.location}</dt>
+            <dd>{profile.location[lang]}</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  /* ---------- HERO ---------- */
+  .hero {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 110px;
+    padding-bottom: 28px;
+    position: relative;
+  }
+  .hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: clamp(24px, 4vw, 64px);
+    align-items: center;
+  }
+  .hero__plate {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  .pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--warm);
+    box-shadow: 0 0 0 0 var(--warm);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    70% {
+      box-shadow: 0 0 0 10px transparent;
+    }
+    100% {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+  .hero__name {
+    font-size: clamp(2.4rem, 5.6vw, 6rem);
+    font-stretch: 120%;
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+    text-transform: uppercase;
+  }
+  .line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.04em;
+  }
+  .line > span {
+    display: inline-block;
+  }
+  .outline {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--ink);
+  }
+  .hero__role {
+    margin-top: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .hero__role strong {
+    font-family: var(--font-display);
+    font-stretch: 110%;
+    font-size: clamp(1.25rem, 2.3vw, 1.7rem);
+    font-weight: 600;
+    background: var(--thermal);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    width: fit-content;
+  }
+  .hero__role span {
+    color: var(--ink-2);
+  }
+  .hero__role em {
+    font-style: normal;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .hero__intro {
+    margin-top: 18px;
+    max-width: 52ch;
+    color: var(--ink-2);
+  }
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 30px;
+  }
+  .hero__foot {
+    display: flex;
+    justify-content: space-between;
+    margin-top: clamp(28px, 6vh, 64px);
+  }
+  .loc-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border: 1.5px solid var(--cool);
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  .scrollcue {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .scrollcue i {
+    width: 1px;
+    height: 34px;
+    background: linear-gradient(var(--ink-3), transparent);
+    position: relative;
+    overflow: hidden;
+  }
+  .scrollcue i::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -12px;
+    width: 1px;
+    height: 12px;
+    background: var(--warm);
+    animation: drop 1.6s var(--ease) infinite;
+  }
+  @keyframes drop {
+    to {
+      top: 34px;
+    }
+  }
+  @media (max-width: 900px) {
+    .hero__grid {
+      grid-template-columns: 1fr;
+    }
+    .hero__name {
+      font-size: min(12.5vw, 5.5rem);
+    }
+    .hero__art {
+      max-width: 560px;
+      width: 100%;
+      margin-inline: auto;
+    }
+  }
+
+  /* ---------- MARQUEE ---------- */
+  .marquee {
+    border-block: 1px solid var(--line-2);
+    overflow: hidden;
+    padding-block: 18px;
+    background: color-mix(in srgb, var(--bg) 60%, transparent);
+  }
+  .marquee__track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+  }
+  .marquee__w {
+    display: inline-flex;
+    align-items: center;
+    gap: 28px;
+    padding-right: 28px;
+    font-family: var(--font-display);
+    font-stretch: 120%;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 4vw, 3rem);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .marquee__w.o {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--ink-2);
+  }
+  .marquee__w b {
+    font-size: 0.5em;
+    color: var(--warm);
+    -webkit-text-stroke: 0;
+  }
+
+  /* ---------- DUCT ---------- */
+  .duct-zone {
+    position: relative;
+  }
+  .duct {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+  }
+  .duct :global(path) {
+    fill: none;
+  }
+  .duct__base {
+    stroke: var(--line-2);
+    stroke-width: 1;
+    stroke-dasharray: 6 6;
+  }
+  .duct__body {
+    stroke-width: 3;
+    stroke-linecap: round;
+  }
+  .duct__flow {
+    stroke: #fff;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 1 16;
+    animation: dflow 0.9s linear infinite;
+    opacity: 0.85;
+  }
+  :global([data-theme='light']) .duct__flow {
+    stroke: var(--bg);
+  }
+  .duct__head {
+    fill: var(--bg);
+    stroke: var(--warm);
+    stroke-width: 2;
+  }
+  .duct :global(.br) {
+    stroke-width: 2;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.8s var(--ease);
+  }
+  .duct :global(.br-term) {
+    fill: var(--bg);
+    stroke-width: 1.5;
+    opacity: 0;
+    transition: opacity 0.4s 0.5s;
+  }
+  .duct :global(.br-on .br-term) {
+    opacity: 1;
+  }
+  @keyframes dflow {
+    to {
+      stroke-dashoffset: -34;
+    }
+  }
+
+  /* ---------- STATS ---------- */
+  .stats {
+    padding-top: clamp(64px, 9vw, 120px);
+  }
+  .stats__row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 28px 20px;
+    position: relative;
+  }
+  .stat + .stat {
+    border-left: 1px solid var(--line-2);
+  }
+  .stat::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    width: 9px;
+    height: 9px;
+    border: 1px solid var(--ink-3);
+    background: var(--bg);
+    transform: rotate(45deg);
+  }
+  .stat__v {
+    font-family: var(--font-display);
+    font-stretch: 120%;
+    font-weight: 700;
+    font-size: clamp(2.6rem, 5.6vw, 4.6rem);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat:nth-child(odd) .stat__v {
+    color: var(--cool);
+  }
+  .stat:nth-child(even) .stat__v {
+    color: var(--warm);
+  }
+  .stat__l {
+    font-weight: 500;
+  }
+  @media (max-width: 760px) {
+    .stats__row {
+      grid-template-columns: 1fr 1fr;
+    }
+    .stat:nth-child(3) {
+      border-left: 0;
+    }
+    .stat:nth-child(n + 3) {
+      border-top: 1px solid var(--line-2);
+    }
+  }
+
+  /* ---------- SCHEDULE TABLE ---------- */
+  .sched {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--line-2);
+    background: color-mix(in srgb, var(--bg) 75%, transparent);
+  }
+  .sched thead th {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    text-align: left;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--line-2);
+    background: var(--bg-2);
+  }
+  .sched td,
+  .sched tbody th {
+    padding: 22px 18px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+    text-align: left;
+  }
+  .sched tbody tr {
+    transition: background-color 0.3s;
+  }
+  .sched tbody tr:hover {
+    background: color-mix(in srgb, var(--cool) 7%, transparent);
+  }
+  .sched__ref {
+    color: var(--warm);
+    width: 80px;
+  }
+  .sched__t {
+    font-family: var(--font-display);
+    font-stretch: 110%;
+    font-size: 1.2rem;
+    font-weight: 600;
+    width: 26%;
+  }
+  .sched__d {
+    color: var(--ink-2);
+  }
+  @media (max-width: 760px) {
+    .sched thead {
+      display: none;
+    }
+    .sched,
+    .sched tbody,
+    .sched tr,
+    .sched td,
+    .sched tbody th {
+      display: block;
+      width: auto;
+    }
+    .sched tbody tr {
+      padding: 18px 16px;
+      border-bottom: 1px solid var(--line-2);
+      display: grid;
+      gap: 8px;
+    }
+    .sched td,
+    .sched tbody th {
+      padding: 0;
+      border: 0;
+    }
+  }
+
+  /* ---------- FILTERS + GRID ---------- */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+  .filter {
+    min-height: 44px;
+    padding: 0 16px;
+    border: 1px solid var(--line-2);
+    background: transparent;
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    color: var(--ink-2);
+    transition: background-color 0.25s, color 0.25s, border-color 0.25s;
+  }
+  .filter sup {
+    margin-left: 4px;
+    color: var(--ink-3);
+    font-size: 0.7em;
+  }
+  .filter:hover {
+    border-color: var(--ink-2);
+    color: var(--ink);
+  }
+  .filter[aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+  .filter[aria-pressed='true'] sup {
+    color: var(--warm);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr));
+    gap: 20px;
+  }
+  .empty {
+    padding: 40px;
+    border: 1px dashed var(--line-2);
+    text-align: center;
+  }
+
+  /* ---------- TIMELINE ---------- */
+  .tl {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
+  .tl::before {
+    content: '';
+    position: absolute;
+    left: 180px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: linear-gradient(var(--warm), var(--cool));
+    opacity: 0.6;
+  }
+  .tl__it {
+    display: grid;
+    grid-template-columns: 160px 42px 1fr;
+    gap: 0 0;
+    padding-bottom: 44px;
+    align-items: start;
+  }
+  .tl__when {
+    padding-top: 6px;
+    text-align: right;
+    padding-right: 20px;
+    color: var(--ink-2);
+  }
+  .tl__node {
+    width: 24px;
+    height: 24px;
+    margin-left: 9px;
+    margin-top: 2px;
+    display: grid;
+    place-items: center;
+    background: var(--bg);
+    position: relative;
+    z-index: 1;
+  }
+  .tl__node svg {
+    width: 22px;
+    height: 22px;
+    fill: var(--bg);
+    stroke: var(--ink-2);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+  }
+  .tl__it.work .tl__node svg {
+    stroke: var(--warm);
+  }
+  .tl__it.school .tl__node svg {
+    stroke: var(--cool);
+  }
+  .tl__it.cur .tl__node svg {
+    fill: var(--warm);
+  }
+  .tl__body {
+    padding-left: 16px;
+    max-width: 680px;
+  }
+  .tl__kind {
+    display: block;
+    margin-bottom: 6px;
+  }
+  .tl__body h3 {
+    font-size: clamp(1.2rem, 2.2vw, 1.55rem);
+    font-stretch: 108%;
+  }
+  .tl__org {
+    color: var(--ink-2);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+  .tl__pts {
+    margin-top: 12px;
+    display: grid;
+    gap: 6px;
+  }
+  .tl__pts li {
+    position: relative;
+    padding-left: 20px;
+    color: var(--ink-2);
+    font-size: 0.97rem;
+  }
+  .tl__pts li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.75em;
+    width: 10px;
+    height: 1px;
+    background: var(--ink-3);
+  }
+  @media (max-width: 700px) {
+    .tl::before {
+      left: 11px;
+    }
+    .tl__it {
+      grid-template-columns: 24px 1fr;
+    }
+    .tl__when {
+      grid-column: 2;
+      grid-row: 1;
+      text-align: left;
+      padding: 0 0 6px 16px;
+    }
+    .tl__node {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      margin-left: 0;
+    }
+    .tl__body {
+      grid-column: 2;
+    }
+  }
+
+  /* ---------- TOOLS ---------- */
+  .section--tight {
+    padding-block: clamp(60px, 8vw, 110px);
+  }
+  .tools {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr));
+    border-top: 1px solid var(--line-2);
+    border-left: 1px solid var(--line-2);
+  }
+  .tool {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 22px 18px;
+    border-right: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+    background: color-mix(in srgb, var(--bg) 75%, transparent);
+    transition: background-color 0.3s;
+  }
+  .tool:hover {
+    background: var(--surface);
+  }
+  .tool__code {
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    border: 1.5px solid var(--cool);
+    color: var(--cool);
+    font-family: var(--font-display);
+    font-stretch: 115%;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .tool:nth-child(even) .tool__code {
+    border-color: var(--warm);
+    color: var(--warm);
+  }
+  .tool__name {
+    font-family: var(--font-display);
+    font-stretch: 108%;
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+
+  /* ---------- CONTACT ---------- */
+  .contact__lead {
+    font-size: clamp(1.2rem, 2.4vw, 1.6rem);
+    color: var(--ink-2);
+    max-width: 36ch;
+  }
+  .contact__mail {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 24px;
+    margin-top: 24px;
+  }
+  .contact__email {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-weight: 700;
+    font-size: clamp(1.35rem, 4.6vw, 3.4rem);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    background: linear-gradient(var(--warm), var(--warm)) 0 100% / 0 3px no-repeat;
+    transition: background-size 0.5s var(--ease);
+  }
+  .contact__email:hover {
+    background-size: 100% 3px;
+  }
+  .contact__grid {
+    margin: 48px 0 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--line-2);
+  }
+  .contact__grid > div {
+    padding: 20px 20px 0 0;
+    display: grid;
+    gap: 6px;
+  }
+  .contact__grid dd {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+  .contact__grid a {
+    text-decoration: none;
+    border-bottom: 1px solid var(--line-2);
+    padding-bottom: 2px;
+  }
+  .contact__grid a:hover {
+    border-color: var(--warm);
+  }
+  @media (max-width: 700px) {
+    .contact__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

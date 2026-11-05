@@ -1,0 +1,28 @@
+---
+/* Section header styled as a drawing title block (cartouche). */
+interface Props { n: string; title: string; sub: string; scale?: string }
+const { n, title, sub, scale = '1:50' } = Astro.props;
+---
+
+<header class="tb" data-reveal>
+  <div class="tb__n"><span>N°</span><strong>{n}</strong></div>
+  <div class="tb__title">
+    <span class="mono">{sub}</span>
+    <h2>{title}</h2>
+  </div>
+  <div class="tb__meta" aria-hidden="true">
+    <span>Lot · CVC</span>
+    <span>Éch. · {scale}</span>
+    <span><i class="dot"></i>Ind. A</span>
+  </div>
+</header>
+
+<style>
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--warm);
+    display: inline-block;
+  }
+</style>

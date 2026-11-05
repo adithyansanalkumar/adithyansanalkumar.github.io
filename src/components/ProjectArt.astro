@@ -1,0 +1,181 @@
+---
+/* Blueprint-style illustration used as a project visual until real
+   images are added. kind: bim | auto | cad | audit | house */
+interface Props { kind: 'bim' | 'auto' | 'cad' | 'audit' | 'house'; label?: string }
+const { kind, label } = Astro.props;
+---
+
+<div class="art" aria-hidden="true">
+  <svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid meet">
+    {kind === 'bim' && (
+      <g>
+        {/* isometric building, 3 floors, duct loop */}
+        <g class="a-ink">
+          <path d="M70 200l130 60 130-60-130-60z" />
+          <path d="M70 200V90l130-60 130 60v110" />
+          <path d="M200 140V30M200 260V140" />
+          <path d="M70 163l130 60 130-60M70 127l130 60 130-60" class="a-faint" />
+          <path d="M200 140l130-50M200 140L70 90" class="a-faint" />
+        </g>
+        <path class="a-cool a-thick" d="M110 196l60 28 60-28 0-30-60 28-60-28z" />
+        <path class="a-warm a-thick" d="M120 158l60 28 50-24" />
+        <path class="a-flow a-cool" d="M110 196l60 28 60-28 0-30-60 28-60-28z" />
+        <rect x="240" y="196" width="30" height="16" class="a-eq" />
+      </g>
+    )}
+    {kind === 'auto' && (
+      <g>
+        {/* ribbon / toolbar of tool buttons */}
+        <rect x="40" y="50" width="320" height="160" class="a-ink" />
+        <path d="M40 76h320" class="a-ink" />
+        <circle cx="54" cy="63" r="4" class="a-warm-f" /><circle cx="68" cy="63" r="4" class="a-faint-f" /><circle cx="82" cy="63" r="4" class="a-faint-f" />
+        {[0, 1, 2, 3, 4].map((i) => (
+          <g>
+            <rect x={60 + i * 60} y={96} width="40" height="40" rx="8" class={i % 2 ? 'a-warm' : 'a-cool'} />
+            <path d={`M${70 + i * 60} ${116}h20`} class={i % 2 ? 'a-warm' : 'a-cool'} />
+            <path d={`M${60 + i * 60} ${150}h40`} class="a-faint" />
+          </g>
+        ))}
+        <path d="M60 178h120M60 190h80" class="a-faint" />
+        <path d="M250 170l20 14-20 14" class="a-cool a-thick" />
+        <path d="M280 198h30" class="a-cool a-thick" />
+      </g>
+    )}
+    {kind === 'cad' && (
+      <g>
+        {/* hydronic schematic: boiler, pump, valves, emitters */}
+        <rect x="40" y="90" width="60" height="90" class="a-ink" />
+        <path d="M52 160l12-20 12 20 12-20" class="a-warm" />
+        <path d="M100 110h200v-40M100 160h200v-30" class="a-ink" />
+        <path class="a-warm a-thick" d="M100 110h200" />
+        <path class="a-cool a-thick" d="M100 160h200" />
+        <circle cx="150" cy="110" r="12" class="a-ink" />
+        <path d="M144 104l14 6-14 6z" class="a-ink" />
+        <path d="M200 102l12 8-12 8zM224 102l-12 8 12 8z" class="a-ink" />
+        <path d="M200 152l12 8-12 8zM224 152l-12 8 12 8z" class="a-ink" />
+        <rect x="290" y="40" width="60" height="30" class="a-ink" />
+        <path d="M296 40v30M304 40v30M312 40v30M320 40v30M328 40v30M336 40v30M344 40v30" class="a-faint" />
+        <path class="a-flow a-warm" d="M100 110h200" />
+        <path class="a-flow-rev a-cool" d="M100 160h200" />
+        <path d="M300 160v40h-60" class="a-faint" />
+      </g>
+    )}
+    {kind === 'audit' && (
+      <g>
+        {/* boiler room: boiler + gauge + checklist */}
+        <rect x="50" y="70" width="110" height="140" rx="6" class="a-ink" />
+        <path d="M70 180h70M70 196h50" class="a-faint" />
+        <path d="M80 70V40h20v30" class="a-ink" />
+        <circle cx="105" cy="125" r="28" class="a-ink" />
+        <path d="M105 125l16-14" class="a-warm a-thick" />
+        <path d="M84 140a28 28 0 0 1 42-36" class="a-cool" />
+        <rect x="210" y="60" width="140" height="150" class="a-ink" />
+        {[0, 1, 2, 3].map((i) => (
+          <g>
+            <rect x="226" y={82 + i * 30} width="14" height="14" class="a-ink" />
+            {i < 3 && <path d={`M229 ${89 + i * 30}l4 4 8-9`} class="a-cool a-thick" />}
+            <path d={`M252 ${89 + i * 30}h80`} class="a-faint" />
+          </g>
+        ))}
+      </g>
+    )}
+    {kind === 'house' && (
+      <g>
+        {/* house section with heat-loss arrows */}
+        <path d="M110 210V120l90-60 90 60v90z" class="a-ink" />
+        <path d="M100 126l100-68 100 68" class="a-ink" />
+        <rect x="150" y="150" width="34" height="34" class="a-ink" />
+        <rect x="216" y="160" width="34" height="50" class="a-ink" />
+        <path d="M80 210h240" class="a-ink" />
+        <path d="M150 196h40" class="a-warm a-thick" />
+        <path d="M290 150h50M290 180h40M200 60V20M110 160H60" class="a-warm" marker-end="url(#pa-arr)" />
+        <defs>
+          <marker id="pa-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0 0L10 5L0 10z" class="a-warm-f" />
+          </marker>
+        </defs>
+      </g>
+    )}
+    <g class="a-faint">
+      <path d="M8 8h18M8 8v18M392 8h-18M392 8v18M8 252h18M8 252v-18M392 252h-18M392 252v-18" />
+    </g>
+  </svg>
+  {label && <span class="art__lbl mono">{label}</span>}
+</div>
+
+<style>
+  .art {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    background:
+      radial-gradient(120% 90% at 50% 100%, color-mix(in srgb, var(--cool) 10%, transparent), transparent 60%),
+      var(--bg-2);
+  }
+  .art svg {
+    width: 86%;
+    height: 86%;
+  }
+  .art :global(.a-ink),
+  .art :global(.a-faint),
+  .art :global(.a-cool),
+  .art :global(.a-warm),
+  .art :global(.a-eq),
+  .art :global(.a-flow),
+  .art :global(.a-flow-rev) {
+    fill: none;
+    stroke-width: 1.4;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+  .art :global(.a-ink),
+  .art :global(.a-eq) {
+    stroke: var(--ink-2);
+  }
+  .art :global(.a-faint) {
+    stroke: var(--line-2);
+  }
+  .art :global(.a-cool) {
+    stroke: var(--cool);
+  }
+  .art :global(.a-warm) {
+    stroke: var(--warm);
+  }
+  .art :global(.a-thick) {
+    stroke-width: 3;
+  }
+  .art :global(.a-warm-f) {
+    fill: var(--warm);
+  }
+  .art :global(.a-faint-f) {
+    fill: var(--line-2);
+  }
+  .art :global(.a-flow),
+  .art :global(.a-flow-rev) {
+    stroke: #fff;
+    opacity: 0.7;
+    stroke-width: 1.6;
+    stroke-dasharray: 2 12;
+    animation: aflow 1.2s linear infinite;
+  }
+  .art :global(.a-flow-rev) {
+    animation-direction: reverse;
+  }
+  :global([data-theme='light']) .art :global(.a-flow),
+  :global([data-theme='light']) .art :global(.a-flow-rev) {
+    stroke: var(--ink);
+    opacity: 0.5;
+  }
+  .art__lbl {
+    position: absolute;
+    left: 14px;
+    bottom: 12px;
+  }
+  @keyframes aflow {
+    to {
+      stroke-dashoffset: -28;
+    }
+  }
+</style>

@@ -1,0 +1,375 @@
+---
+import ProjectArt from './ProjectArt.astro';
+import { categories, projects, type Project } from '../data/projects';
+import { ui, homeUrl, projectUrl, href, type Lang } from '../data/site';
+interface Props { p: Project; lang: Lang }
+const { p, lang } = Astro.props;
+const t = ui[lang];
+const idx = projects.findIndex((x) => x.slug === p.slug);
+const next = projects[(idx + 1) % projects.length];
+const num = String(idx + 1).padStart(2, '0');
+const meta = [
+  p.year && { k: t.project.year, v: p.year },
+  { k: t.project.category, v: categories[p.category][lang] },
+  p.tools.length && { k: t.project.tools, v: p.tools.join(' · ') },
+  p.status && { k: t.project.status, v: p.status[lang] },
+].filter(Boolean) as { k: string; v: string }[];
+const hasGallery = !!p.gallery?.length;
+---
+
+<article class="pd">
+  <header class="wrap pd__head">
+    <a class="pd__back mono" href={`${homeUrl(lang)}#realisations`}>← {t.project.back}</a>
+    <p class="mono pd__num" data-hero-item>{lang === 'fr' ? 'Planche' : 'Sheet'} {num} / {String(projects.length).padStart(2, '0')}</p>
+    <h1 class="pd__title"><span class="line"><span data-hero-line>{p.title[lang]}</span></span></h1>
+    <p class="pd__sum" data-hero-item>{p.summary[lang]}</p>
+    <dl class="pd__meta" data-hero-item>
+      {meta.map((m) => (
+        <div>
+          <dt class="mono">{m.k}</dt>
+          <dd>{m.v}</dd>
+        </div>
+      ))}
+    </dl>
+  </header>
+
+  <div class="wrap">
+    <figure class="pd__cover" data-reveal>
+      {p.cover ? <img src={href(p.cover)} alt={p.gallery?.[0]?.alt[lang] ?? ''} /> : <ProjectArt kind={p.art} label={t.works.soon} />}
+    </figure>
+  </div>
+
+  <div class="wrap pd__body">
+    {(p.context || p.mission) && (
+      <div class="pd__text">
+        {p.context && (
+          <section data-reveal>
+            <h2 class="mono">{t.project.context}</h2>
+            <p>{p.context[lang]}</p>
+          </section>
+        )}
+        {p.mission && (
+          <section data-reveal>
+            <h2 class="mono">{t.project.mission}</h2>
+            <p>{p.mission[lang]}</p>
+          </section>
+        )}
+      </div>
+    )}
+    {p.highlights && (
+      <section class="pd__hl" data-reveal>
+        <h2 class="mono">{t.project.highlights}</h2>
+        <ul>
+          {p.highlights[lang].map((h, i) => (
+            <li><span class="mono">{String(i + 1).padStart(2, '0')}</span>{h}</li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <!-- 3D model -->
+    {p.art !== 'auto' && (
+      <section class="pd__model" data-reveal>
+        <h2 class="mono">{t.project.model}</h2>
+        {p.model ? (
+          <div class="mv" data-model={href(p.model)} data-alt={p.title[lang]}>
+            <div class="mv__stage" data-model-stage>
+              <ProjectArt kind={p.art} />
+              <button class="btn btn--solid mv__btn" type="button" data-model-load>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l9 5v10l-9 5-9-5V7zM12 12l9-5M12 12v10M12 12L3 7" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+                {t.project.modelLoad}
+              </button>
+            </div>
+            <p class="mono mv__hint">{t.project.modelHint}</p>
+          </div>
+        ) : (
+          <div class="mv mv--soon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l9 5v10l-9 5-9-5V7zM12 12l9-5M12 12v10M12 12L3 7" fill="none" stroke="currentColor" stroke-width="1.2" /></svg>
+            <p class="mono">{t.project.modelSoon}</p>
+          </div>
+        )}
+      </section>
+    )}
+
+    <!-- gallery -->
+    <section class="pd__gal" data-reveal>
+      <h2 class="mono">{t.project.gallery}</h2>
+      {hasGallery ? (
+        <ul class="gal">
+          {p.gallery!.map((g) => (
+            <li>
+              <a href={href(g.src)} data-lb data-alt={g.alt[lang]}>
+                <img src={href(g.src)} alt={g.alt[lang]} loading="lazy" decoding="async" />
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="pd__empty mono">{t.project.gallerySoon}</p>
+      )}
+    </section>
+
+    {p.links && (
+      <section class="pd__links" data-reveal>
+        <h2 class="mono">{t.project.links}</h2>
+        <ul>
+          {p.links.map((l) => (
+            <li><a href={l.url} target="_blank" rel="noopener">{l.label[lang]} ↗</a></li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </div>
+
+  <nav class="wrap pd__next" aria-label={t.project.next}>
+    <a href={projectUrl(lang, next.slug)} data-reveal>
+      <span class="mono">{t.project.next} →</span>
+      <strong>{next.title[lang]}</strong>
+    </a>
+  </nav>
+
+  <dialog class="lb" data-lightbox aria-label={t.project.gallery}>
+    <form method="dialog"><button class="lb__x" aria-label={t.project.close}>✕</button></form>
+    <img alt="" />
+    <p class="mono" data-lb-cap></p>
+  </dialog>
+</article>
+
+<style>
+  .pd {
+    padding-top: 130px;
+  }
+  .pd__head {
+    display: grid;
+    gap: 18px;
+    padding-bottom: 40px;
+  }
+  .pd__back {
+    text-decoration: none;
+    width: fit-content;
+    padding: 8px 0;
+  }
+  .pd__back:hover {
+    color: var(--ink);
+  }
+  .pd__title {
+    font-size: clamp(2.2rem, 6.4vw, 5.4rem);
+    font-stretch: 118%;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.03em;
+    max-width: 18ch;
+  }
+  .line {
+    display: block;
+    overflow: hidden;
+  }
+  .line > span {
+    display: inline-block;
+  }
+  .pd__sum {
+    font-size: clamp(1.1rem, 2vw, 1.35rem);
+    color: var(--ink-2);
+    max-width: 52ch;
+  }
+  .pd__meta {
+    margin: 12px 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    border: 1px solid var(--line-2);
+  }
+  .pd__meta > div {
+    padding: 14px 16px;
+    display: grid;
+    gap: 4px;
+    border-right: 1px solid var(--line-2);
+  }
+  .pd__meta > div:last-child {
+    border-right: 0;
+  }
+  .pd__meta dd {
+    margin: 0;
+    font-weight: 500;
+  }
+  .pd__cover {
+    margin: 0;
+    aspect-ratio: 16 / 8;
+    border: 1px solid var(--line-2);
+    overflow: hidden;
+    background: var(--bg-2);
+  }
+  .pd__cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .pd__body {
+    display: grid;
+    gap: 64px;
+    padding-block: 72px;
+  }
+  .pd__body h2 {
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line-2);
+  }
+  .pd__text {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+  .pd__text p {
+    color: var(--ink-2);
+    font-size: 1.08rem;
+  }
+  .pd__hl ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+    gap: 0;
+    border-left: 1px solid var(--line-2);
+    border-top: 1px solid var(--line-2);
+  }
+  .pd__hl li {
+    display: grid;
+    gap: 8px;
+    padding: 20px;
+    border-right: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+  }
+  .pd__hl li .mono {
+    color: var(--warm);
+  }
+  .mv {
+    border: 1px solid var(--line-2);
+    background: var(--bg-2);
+  }
+  .mv__stage {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    display: grid;
+    place-items: center;
+  }
+  .mv__stage :global(model-viewer) {
+    width: 100%;
+    height: 100%;
+    --poster-color: transparent;
+  }
+  .mv__btn {
+    position: absolute;
+  }
+  .mv__hint {
+    padding: 10px 14px;
+    border-top: 1px solid var(--line-2);
+  }
+  .mv--soon {
+    display: grid;
+    place-items: center;
+    gap: 12px;
+    padding: 56px 20px;
+    border-style: dashed;
+    text-align: center;
+  }
+  .mv--soon svg {
+    width: 48px;
+    height: 48px;
+    color: var(--cool);
+  }
+  .gal {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 14px;
+  }
+  .gal a {
+    display: block;
+    border: 1px solid var(--line-2);
+    overflow: hidden;
+    aspect-ratio: 3 / 2;
+  }
+  .gal img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s var(--ease);
+  }
+  .gal a:hover img {
+    transform: scale(1.04);
+  }
+  .pd__empty {
+    padding: 32px;
+    border: 1px dashed var(--line-2);
+    text-align: center;
+  }
+  .pd__links li a {
+    display: inline-block;
+    padding: 10px 0;
+    font-size: 1.1rem;
+    text-decoration: none;
+    border-bottom: 1px solid var(--line-2);
+  }
+  .pd__links li a:hover {
+    border-color: var(--warm);
+  }
+  .pd__next {
+    padding-bottom: 100px;
+  }
+  .pd__next a {
+    display: grid;
+    gap: 10px;
+    padding: 40px 0;
+    border-top: 1px solid var(--line-2);
+    text-decoration: none;
+  }
+  .pd__next strong {
+    font-family: var(--font-display);
+    font-stretch: 118%;
+    font-size: clamp(1.8rem, 5vw, 3.6rem);
+    text-transform: uppercase;
+    line-height: 1;
+    transition: color 0.3s;
+  }
+  .pd__next a:hover strong {
+    color: var(--warm);
+  }
+  .lb {
+    max-width: min(1200px, 94vw);
+    max-height: 92vh;
+    padding: 0;
+    border: 1px solid var(--line-2);
+    background: var(--bg);
+    color: var(--ink);
+  }
+  .lb::backdrop {
+    background: rgba(4, 10, 20, 0.85);
+    backdrop-filter: blur(4px);
+  }
+  .lb img {
+    max-height: 80vh;
+    width: auto;
+    margin-inline: auto;
+  }
+  .lb p {
+    padding: 10px 14px;
+  }
+  .lb__x {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line-2);
+    background: var(--bg);
+    cursor: pointer;
+  }
+  @media (max-width: 760px) {
+    .pd__text {
+      grid-template-columns: 1fr;
+    }
+    .pd__cover {
+      aspect-ratio: 4 / 3;
+    }
+    .pd__meta > div {
+      border-right: 0;
+      border-bottom: 1px solid var(--line-2);
+    }
+  }
+</style>

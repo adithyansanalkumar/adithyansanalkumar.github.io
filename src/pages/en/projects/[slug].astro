@@ -1,0 +1,15 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ProjectDetail from '../../../components/ProjectDetail.astro';
+import { projects } from '../../../data/projects';
+import { projectUrl } from '../../../data/site';
+
+export function getStaticPaths() {
+  return projects.map((p) => ({ params: { slug: p.slug }, props: { p } }));
+}
+const { p } = Astro.props;
+---
+
+<Base lang="en" title={p.title.en} description={p.summary.en} altHref={projectUrl('fr', p.slug)} image={p.cover}>
+  <ProjectDetail p={p} lang="en" />
+</Base>

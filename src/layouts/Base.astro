@@ -1,0 +1,133 @@
+---
+/* Shared page shell: <head>, theme, header, footer, scroll engine. */
+import '@fontsource-variable/archivo/wdth.css';
+import '@fontsource/ibm-plex-sans/400.css';
+import '@fontsource/ibm-plex-sans/500.css';
+import '@fontsource/ibm-plex-sans/600.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { ui, href, type Lang } from '../data/site';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  description?: string;
+  altHref: string; // same page in the other language
+  image?: string;
+  onHome?: boolean;
+}
+const { lang, title, description, altHref, image = '/og.png', onHome = false } = Astro.props;
+const t = ui[lang];
+const pageTitle = title ? `${title} — Adithyan Sanal Kumar` : t.metaTitle;
+const desc = description ?? t.metaDesc;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(href(image), Astro.site);
+const alt = new URL(altHref, Astro.site);
+---
+
+<!doctype html>
+<html lang={t.htmlLang} data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={desc} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang={lang === 'fr' ? 'en' : 'fr'} href={alt} />
+    <link rel="alternate" hreflang={lang} href={canonical} />
+    <link rel="icon" href={href('/favicon.svg')} type="image/svg+xml" />
+    <meta name="theme-color" content="#081325" />
+    <meta name="author" content="Adithyan Sanal Kumar" />
+
+    <!-- Link preview (LinkedIn, WhatsApp, etc.) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content={lang === 'fr' ? 'fr_FR' : 'en_GB'} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: 'Adithyan Sanal Kumar',
+      jobTitle: t.hero.role,
+      worksFor: { '@type': 'Organization', name: 'Derichebourg Énergie' },
+      url: Astro.site?.toString(),
+      sameAs: ['https://www.linkedin.com/in/adithyan-sanal-kumar-abcd/'],
+    })} />
+
+    <!-- Theme before paint: saved choice, else system preference -->
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        var saved = null;
+        try { saved = localStorage.getItem('theme'); } catch (e) {}
+        var theme = saved || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        d.setAttribute('data-theme', theme);
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">{t.skip}</a>
+    <Header lang={lang} altHref={altHref} onHome={onHome} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+
+    <!-- Elevation marker: shows scroll depth like a level on a section drawing -->
+    <div class="level" aria-hidden="true">
+      <svg viewBox="0 0 16 12" width="14" height="10"><path d="M1 1h14L8 11z" fill="none" stroke="currentColor" stroke-width="1.4" /></svg>
+      <span>{t.level}</span>
+      <span class="level__v" data-level>+0.00</span>
+    </div>
+
+    <script>
+      import '../scripts/main';
+    </script>
+  </body>
+</html>
+
+<style>
+  .level {
+    position: fixed;
+    right: 20px;
+    bottom: 18px;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid var(--line-2);
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    backdrop-filter: blur(6px);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    pointer-events: none;
+  }
+  .level svg {
+    color: var(--warm);
+  }
+  .level__v {
+    color: var(--ink);
+    min-width: 6ch;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  @media (max-width: 760px) {
+    .level {
+      display: none;
+    }
+  }
+</style>

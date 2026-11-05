@@ -1,0 +1,161 @@
+---
+import ProjectArt from './ProjectArt.astro';
+import { categories, type Project } from '../data/projects';
+import { ui, projectUrl, href, type Lang } from '../data/site';
+interface Props { p: Project; lang: Lang; index: number }
+const { p, lang, index } = Astro.props;
+const t = ui[lang];
+const num = String(index + 1).padStart(2, '0');
+---
+
+<li class="card" data-cat={p.category} data-reveal>
+  <a href={projectUrl(lang, p.slug)} class="card__a">
+    <div class="card__media">
+      {p.cover ? (
+        <img src={href(p.cover)} alt="" loading="lazy" decoding="async" />
+      ) : (
+        <ProjectArt kind={p.art} label={t.works.soon} />
+      )}
+      <span class="card__num">{num}</span>
+    </div>
+    <div class="card__body">
+      <p class="card__meta mono">
+        <span class="card__cat">{categories[p.category][lang]}</span>
+        {p.year && <span>{p.year}</span>}
+      </p>
+      <h3 class="card__title">{p.title[lang]}</h3>
+      <p class="card__sum">{p.summary[lang]}</p>
+      <div class="card__foot">
+        <div class="chips">{p.tools.slice(0, 3).map((x) => <span class="chip">{x}</span>)}</div>
+        <span class="card__go" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+        </span>
+      </div>
+      <span class="sr-only">{t.works.open}</span>
+    </div>
+  </a>
+</li>
+
+<style>
+  .card {
+    position: relative;
+  }
+  .card__a {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    border: 1px solid var(--line-2);
+    background: color-mix(in srgb, var(--surface) 70%, transparent);
+    position: relative;
+    transition: transform 0.5s var(--ease), border-color 0.3s, box-shadow 0.5s var(--ease);
+  }
+  .card__a::before {
+    /* thermal edge that appears on hover */
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border: 1px solid transparent;
+    background: var(--thermal) border-box;
+    -webkit-mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+  .card__a:hover,
+  .card__a:focus-visible {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow);
+  }
+  .card__a:hover::before,
+  .card__a:focus-visible::before {
+    opacity: 1;
+  }
+  .card__media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line-2);
+    background: var(--bg-2);
+  }
+  .card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s var(--ease);
+  }
+  .card__a:hover .card__media img {
+    transform: scale(1.04);
+  }
+  .card__num {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    padding: 3px 7px;
+    background: var(--bg);
+    border: 1px solid var(--line-2);
+    color: var(--ink-2);
+  }
+  .card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    flex: 1;
+  }
+  .card__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .card__cat {
+    color: var(--cool);
+  }
+  .card__title {
+    font-size: 1.35rem;
+    font-stretch: 108%;
+    line-height: 1.15;
+  }
+  .card__sum {
+    color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+  .card__foot {
+    margin-top: auto;
+    padding-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .card__go {
+    flex: none;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line-2);
+    border-radius: 50%;
+    transition: background-color 0.3s, border-color 0.3s, transform 0.4s var(--ease);
+  }
+  .card__go svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+  }
+  .card__a:hover .card__go {
+    background: var(--warm);
+    border-color: var(--warm);
+    color: #fff;
+    transform: rotate(-45deg);
+  }
+  .card.is-hidden {
+    display: none;
+  }
+</style>

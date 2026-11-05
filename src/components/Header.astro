@@ -1,0 +1,247 @@
+---
+import { ui, profile, homeUrl, type Lang } from '../data/site';
+interface Props { lang: Lang; altHref: string; onHome: boolean }
+const { lang, altHref, onHome } = Astro.props;
+const t = ui[lang];
+const home = homeUrl(lang);
+const a = (id: string) => (onHome ? `#${id}` : `${home}#${id}`);
+const links = [
+  { id: 'expertise', label: t.nav.expertise },
+  { id: 'realisations', label: t.nav.works },
+  { id: 'parcours', label: t.nav.path },
+  { id: 'contact', label: t.nav.contact },
+];
+---
+
+<header class="hdr" data-hdr>
+  <div class="hdr__in">
+    <a class="logo" href={home} aria-label="Adithyan Sanal Kumar">
+      <span class="logo__box">{profile.initials}</span>
+      <span class="logo__txt">
+        <strong>Adithyan S. Kumar</strong>
+        <span>BE · CVC</span>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label={lang === 'fr' ? 'Navigation principale' : 'Main navigation'} id="nav" data-nav>
+      <ul>
+        {links.map((l, i) => (
+          <li>
+            <a href={a(l.id)} data-navlink={l.id}>
+              <span class="nav__i">0{i + 2}</span>{l.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="tools">
+      <a class="iconbtn lang" href={altHref} hreflang={lang === 'fr' ? 'en' : 'fr'} aria-label={t.switchLang}>
+        <span class:list={{ on: lang === 'fr' }}>FR</span><span aria-hidden="true">/</span><span class:list={{ on: lang === 'en' }}>EN</span>
+      </a>
+      <button
+        class="iconbtn"
+        type="button"
+        data-theme-toggle
+        data-label-light={t.themeToLight}
+        data-label-dark={t.themeToDark}
+        aria-label={t.themeToLight}
+      >
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2" /><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" /></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" /></svg>
+      </button>
+      <button class="iconbtn burger" type="button" aria-expanded="false" aria-controls="nav" data-burger>
+        <span class="sr-only">{t.menu}</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10" /></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .hdr {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 50;
+    transition: transform 0.45s var(--ease), background-color 0.3s, border-color 0.3s;
+    border-bottom: 1px solid transparent;
+  }
+  .hdr.is-scrolled {
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom-color: var(--line);
+  }
+  .hdr.is-hidden {
+    transform: translateY(-100%);
+  }
+  .hdr__in {
+    max-width: calc(var(--max) + var(--gutter) * 2);
+    margin-inline: auto;
+    padding: 14px var(--gutter);
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    margin-right: auto;
+  }
+  .logo__box {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1.5px solid var(--ink);
+    font-family: var(--font-display);
+    font-stretch: 120%;
+    font-weight: 800;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    position: relative;
+  }
+  .logo__box::after {
+    content: '';
+    position: absolute;
+    right: -1.5px;
+    bottom: -1.5px;
+    width: 12px;
+    height: 12px;
+    background: var(--warm);
+  }
+  .logo__txt {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+  .logo__txt strong {
+    font-family: var(--font-display);
+    font-stretch: 110%;
+    font-size: 0.95rem;
+  }
+  .logo__txt span {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    color: var(--ink-3);
+  }
+  .nav ul {
+    display: flex;
+    gap: 4px;
+  }
+  .nav a {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 10px 12px;
+    text-decoration: none;
+    font-size: 0.92rem;
+    color: var(--ink-2);
+    position: relative;
+    transition: color 0.2s;
+  }
+  .nav a::after {
+    content: '';
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 4px;
+    height: 2px;
+    background: var(--thermal);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s var(--ease);
+  }
+  .nav a:hover,
+  .nav a.is-active {
+    color: var(--ink);
+  }
+  .nav a:hover::after,
+  .nav a.is-active::after {
+    transform: scaleX(1);
+  }
+  .nav__i {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--ink-3);
+  }
+  .tools {
+    display: flex;
+    gap: 6px;
+  }
+  .iconbtn {
+    display: inline-grid;
+    place-items: center;
+    min-width: 44px;
+    height: 44px;
+    padding: 0 10px;
+    border: 1px solid var(--line-2);
+    background: transparent;
+    border-radius: var(--radius);
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.2s, background-color 0.2s;
+  }
+  .iconbtn:hover {
+    border-color: var(--ink-2);
+    background: var(--surface);
+  }
+  .iconbtn svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+  }
+  .lang {
+    display: inline-flex;
+    gap: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-3);
+  }
+  .lang .on {
+    color: var(--ink);
+  }
+  :global([data-theme='light']) .i-sun,
+  :global([data-theme='dark']) .i-moon {
+    display: none;
+  }
+  .burger {
+    display: none;
+  }
+  @media (max-width: 860px) {
+    .burger {
+      display: inline-grid;
+    }
+    .nav {
+      position: fixed;
+      inset: 73px 0 auto 0;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line-2);
+      padding: 8px var(--gutter) 20px;
+      display: none;
+    }
+    .nav.is-open {
+      display: block;
+    }
+    .nav ul {
+      flex-direction: column;
+    }
+    .nav a {
+      font-size: 1.25rem;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+      font-family: var(--font-display);
+    }
+    .nav a::after {
+      display: none;
+    }
+    .logo__txt {
+      display: none;
+    }
+  }
+</style>

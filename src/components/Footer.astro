@@ -1,0 +1,94 @@
+---
+import { ui, profile, type Lang } from '../data/site';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang];
+const year = new Date().getFullYear();
+---
+
+<footer class="ftr">
+  <div class="wrap ftr__in">
+    <div class="ftr__cartouche">
+      <div><span class="mono">{lang === 'fr' ? 'Dessinateur' : 'Drawn by'}</span><strong>{profile.firstName} {profile.lastName}</strong></div>
+      <div><span class="mono">{lang === 'fr' ? 'Lot' : 'Trade'}</span><strong>CVC / HVAC</strong></div>
+      <div><span class="mono">{lang === 'fr' ? 'Indice' : 'Rev.'}</span><strong>A — {year}</strong></div>
+      <div><span class="mono">Format</span><strong>Web · A∞</strong></div>
+    </div>
+    <div class="ftr__row">
+      <p class="mono">© {year} {profile.firstName} {profile.lastName} · {t.footer.rights}</p>
+      <div class="ftr__links">
+        <a href={`mailto:${profile.email}`}>E-mail</a>
+        <a href={profile.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+        <a href="#main" data-top>{t.footer.top} ↑</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ftr {
+    border-top: 1px solid var(--line-2);
+    padding-block: 48px 64px;
+    position: relative;
+    background: color-mix(in srgb, var(--bg) 70%, transparent);
+  }
+  .ftr__in {
+    display: grid;
+    gap: 28px;
+  }
+  .ftr__cartouche {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid var(--line-2);
+  }
+  .ftr__cartouche > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 16px;
+    min-width: 0;
+  }
+  .ftr__cartouche > div + div {
+    border-left: 1px solid var(--line-2);
+  }
+  .ftr__cartouche strong {
+    font-family: var(--font-display);
+    font-stretch: 110%;
+    font-size: 1rem;
+    overflow-wrap: anywhere;
+  }
+  .ftr__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .ftr__links {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .ftr__links a {
+    font-size: 0.9rem;
+    color: var(--ink-2);
+    text-decoration: none;
+    padding: 8px 0;
+  }
+  .ftr__links a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  @media (max-width: 640px) {
+    .ftr__cartouche {
+      grid-template-columns: 1fr 1fr;
+    }
+    .ftr__cartouche > div:nth-child(3) {
+      border-left: 0;
+    }
+    .ftr__cartouche > div:nth-child(n + 3) {
+      border-top: 1px solid var(--line-2);
+    }
+  }
+</style>
