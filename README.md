@@ -8,19 +8,38 @@ Publié automatiquement sur GitHub Pages à chaque `git push`.
 
 ---
 
-## Modifier le contenu (sans coder)
+## Panneau d'administration — https://adithyansanalkumar.github.io/admin/
+
+Tout le contenu se modifie depuis `/admin/` (projets, images, CV, parcours, chiffres,
+expertise, logiciels, **tous les textes FR/EN**). Chaque « Enregistrer » met le site à jour en ~1 minute.
+
+**Connexion (une seule fois par navigateur) :** cliquer **« Sign In Using Access Token »**,
+suivre le lien vers GitHub (les permissions sont pré-cochées : *Contents → Read and write*
+sur ce dépôt), créer le jeton, le coller. Ne partagez jamais ce jeton.
+
+### Statistiques de visites (GoatCounter)
+1. Créer un compte gratuit sur https://www.goatcounter.com (code ex. `adithyansanalkumar`).
+2. Admin → Réglages du site → Profil & contact → « Statistiques : code GoatCounter ».
+3. Tableau de bord : `https://<code>.goatcounter.com` (visites, pages, pays, sources, clics CV/LinkedIn).
+
+### Formulaire de contact (Web3Forms)
+1. Sur https://web3forms.com, saisir votre e-mail → une clé d'accès arrive par e-mail.
+2. Admin → Profil & contact → « Formulaire de contact : clé Web3Forms ». Le formulaire apparaît.
+
+## Modifier le contenu à la main (fichiers)
 
 | Je veux…                                   | Fichier à modifier                    |
 | ------------------------------------------ | ------------------------------------- |
-| Changer mon e-mail, LinkedIn, lien du CV    | `src/data/site.ts` → `profile`        |
-| Modifier mon parcours / mes expériences    | `src/data/site.ts` → `timeline`       |
-| Modifier compétences, logiciels, chiffres  | `src/data/site.ts` → `expertise`, `tools`, `ui.fr.stats` |
-| Ajouter / modifier un projet               | `src/data/projects.ts`                |
+| Changer mon e-mail, LinkedIn, CV, stats, formulaire | `src/content/settings/profile.json` |
+| Modifier mon parcours / mes expériences    | `src/content/settings/timeline.json`  |
+| Modifier compétences, logiciels, chiffres  | `src/content/settings/skills.json`    |
+| Modifier tous les textes du site (FR/EN)   | `src/content/settings/texts.json`     |
+| Ajouter / modifier un projet               | `src/content/projects/<nom>.json`     |
 
 ### Ajouter un projet
 
 1. Créer un dossier `public/images/projects/<nom-du-projet>/` et y mettre les images (JPG/PNG/WebP, ~1600 px de large suffit).
-2. Dans `src/data/projects.ts`, copier un bloc existant, changer le `slug` et les textes FR/EN.
+2. Copier un fichier de `src/content/projects/`, le renommer (le nom = l'adresse de la page) et changer les textes FR/EN.
 3. Renseigner `cover` (image principale) et `gallery` (liste des images).
 
 ### Ajouter une maquette 3D (Revit → GLB)
@@ -28,13 +47,13 @@ Publié automatiquement sur GitHub Pages à chaque `git push`.
 1. Dans Revit, exporter la vue 3D en **.glb** (complément gratuit « glTF Exporter », ou Revit → IFC → convertisseur IFC→GLB).
 2. Garder le fichier léger (< 20 Mo idéalement : vue 3D filtrée sur le lot CVC).
 3. Le copier dans `public/models/<nom-du-projet>.glb`.
-4. Dans le projet : `model: '/models/<nom-du-projet>.glb'`.
+4. Dans le projet : `"model": "/models/<nom-du-projet>.glb"` (ou via l'admin, champ « Maquette 3D »).
 
 Le visiteur clique sur « Charger la maquette 3D » et peut tourner / zoomer le modèle.
 
 ### Remplacer le CV
 
-Mettre `cv.pdf` dans `public/`, puis dans `src/data/site.ts` : `cvUrl: '/cv.pdf'`.
+Admin → Profil & contact → CV (PDF), ou mettre `cv.pdf` dans `public/` et `"cv": "/cv.pdf"` dans `profile.json`.
 
 ---
 

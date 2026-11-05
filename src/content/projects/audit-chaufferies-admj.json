@@ -1,0 +1,27 @@
+{
+  "order": 4,
+  "hidden": false,
+  "title_fr": "ADMJ — Audit technique de chaufferies",
+  "title_en": "ADMJ — Boiler-room technical audit",
+  "category": "audit",
+  "art": "audit",
+  "year": "",
+  "status_fr": "Projet création d’entreprise — BTS 1",
+  "status_en": "Business-creation project — BTS year 1",
+  "tools": [
+    "Audit",
+    "Chaufferie"
+  ],
+  "summary_fr": "Création d’une entreprise fictive, ADMJ, spécialisée dans l’audit technique des chaufferies.",
+  "summary_en": "Setting up ADMJ, a mock company specialised in technical audits of boiler rooms.",
+  "context_fr": "",
+  "context_en": "",
+  "mission_fr": "",
+  "mission_en": "",
+  "highlights_fr": [],
+  "highlights_en": [],
+  "cover": "",
+  "gallery": [],
+  "model": "",
+  "links": []
+}

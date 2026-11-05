@@ -1,0 +1,122 @@
+{
+  "stats": [
+    {
+      "value": 120,
+      "suffix": "+",
+      "label_fr": "heures sur Revit",
+      "label_en": "hours in Revit",
+      "note_fr": "Projet BTS",
+      "note_en": "BTS project"
+    },
+    {
+      "value": 20,
+      "suffix": "",
+      "label_fr": "logements modélisés",
+      "label_en": "dwellings modelled",
+      "note_fr": "Habitat Jeune",
+      "note_en": "Habitat Jeune"
+    },
+    {
+      "value": 20,
+      "suffix": "+",
+      "label_fr": "outils pyRevit",
+      "label_en": "pyRevit tools",
+      "note_fr": "Extension BE CVC ADI",
+      "note_en": "BE CVC ADI extension"
+    }
+  ],
+  "expertise": [
+    {
+      "ref": "M-01",
+      "title_fr": "Modélisation BIM CVC",
+      "title_en": "HVAC BIM modelling",
+      "desc_fr": "Réseaux aérauliques et hydrauliques, équipements, familles et maquettes coordonnées.",
+      "desc_en": "Ductwork and piping networks, equipment, families and coordinated models.",
+      "tools": [
+        "Revit"
+      ]
+    },
+    {
+      "ref": "T-02",
+      "title_fr": "Bilans thermiques",
+      "title_en": "Heat-load calculations",
+      "desc_fr": "Calcul des déperditions et des puissances pour le dimensionnement des installations.",
+      "desc_en": "Heat-loss and load calculations to size heating and cooling systems.",
+      "tools": [
+        "Perrenoud",
+        "ClimaBIM"
+      ]
+    },
+    {
+      "ref": "S-03",
+      "title_fr": "Schémas & plans",
+      "title_en": "Schematics & drawings",
+      "desc_fr": "Schémas de principe hydrauliques et aérauliques, plans de réseaux.",
+      "desc_en": "Hydronic and air schematic diagrams, network layouts.",
+      "tools": [
+        "AutoCAD"
+      ]
+    },
+    {
+      "ref": "A-04",
+      "title_fr": "Automatisation Revit",
+      "title_en": "Revit automation",
+      "desc_fr": "Outils sur mesure : réservations automatiques, pertes de charge, calorifuge, contrôle de clashs.",
+      "desc_en": "Custom tools: automatic openings, pressure drops, insulation, clash checks.",
+      "tools": [
+        "pyRevit",
+        "Python",
+        "Dynamo"
+      ]
+    },
+    {
+      "ref": "E-05",
+      "title_fr": "Exploitation & audit",
+      "title_en": "Operations & audit",
+      "desc_fr": "Maintenance CVC, relevés sur site et audit technique de chaufferies.",
+      "desc_en": "HVAC maintenance, site surveys and technical audits of boiler rooms.",
+      "tools": [
+        "Terrain",
+        "Audit"
+      ]
+    }
+  ],
+  "software": [
+    {
+      "code": "Rvt",
+      "name": "Revit",
+      "note_fr": "Modélisation BIM",
+      "note_en": "BIM modelling"
+    },
+    {
+      "code": "Cad",
+      "name": "AutoCAD",
+      "note_fr": "Schémas, plans",
+      "note_en": "Schematics, plans"
+    },
+    {
+      "code": "Prn",
+      "name": "Perrenoud",
+      "note_fr": "Bilans thermiques",
+      "note_en": "Heat loads"
+    },
+    {
+      "code": "Clb",
+      "name": "ClimaBIM",
+      "note_fr": "Bilans thermiques",
+      "note_en": "Heat loads"
+    },
+    {
+      "code": "Py",
+      "name": "pyRevit",
+      "note_fr": "Outils Revit",
+      "note_en": "Revit tools"
+    },
+    {
+      "code": "Dyn",
+      "name": "Dynamo",
+      "note_fr": "Scripts visuels",
+      "note_en": "Visual scripts"
+    }
+  ]
+}

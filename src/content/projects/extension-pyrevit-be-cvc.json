@@ -1,0 +1,48 @@
+{
+  "order": 1,
+  "hidden": false,
+  "title_fr": "Extension pyRevit « BE CVC ADI »",
+  "title_en": "“BE CVC ADI” pyRevit extension",
+  "category": "auto",
+  "art": "auto",
+  "year": "2026",
+  "status_fr": "",
+  "status_en": "",
+  "tools": [
+    "pyRevit",
+    "Python",
+    "Revit API"
+  ],
+  "summary_fr": "Un onglet Revit sur mesure qui automatise les tâches répétitives du bureau d’études CVC.",
+  "summary_en": "A custom Revit tab that automates the repetitive tasks of an HVAC design office.",
+  "context_fr": "Sur un projet CVC, une grande partie du temps passe dans des tâches répétitives : réservations, numérotation des bouches, calorifuge, contrôles. J’ai développé ma propre barre d’outils Revit pour les automatiser.",
+  "context_en": "On an HVAC project, a lot of time goes into repetitive tasks: openings, terminal numbering, insulation, checks. I built my own Revit toolbar to automate them.",
+  "mission_fr": "Conception, développement en Python (pyRevit / API Revit) et design des icônes de plus de 20 outils répartis en 9 panneaux.",
+  "mission_en": "Design, Python development (pyRevit / Revit API) and icon design for 20+ tools across 9 panels.",
+  "highlights_fr": [
+    "Réseaux : tracer et relier les réseaux, calorifuge, couleurs par système",
+    "Réservations : génération automatique des réservations du projet",
+    "Hydraulique : calcul des pertes de charge, raccordement des appareils",
+    "Thermique : bilan thermique directement dans Revit",
+    "Clashs : détection et contrôle des conflits",
+    "Outils : renommage des bouches, atelier familles, lien Excel, audit VRD"
+  ],
+  "highlights_en": [
+    "Networks: draw and connect systems, insulation, colour by system",
+    "Openings: automatic generation of builder’s work openings",
+    "Hydronics: pressure-drop calculation, equipment connection",
+    "Thermal: heat-load calculation inside Revit",
+    "Clashes: conflict detection and checks",
+    "Utilities: terminal renaming, family workshop, Excel link, VRD audit"
+  ],
+  "cover": "/images/projects/extension-pyrevit-be-cvc/icons.png",
+  "gallery": [
+    {
+      "src": "/images/projects/extension-pyrevit-be-cvc/icons.png",
+      "alt_fr": "Les icônes des outils de l’extension, thèmes sombre et clair",
+      "alt_en": "The extension’s tool icons, dark and light themes"
+    }
+  ],
+  "model": "",
+  "links": []
+}

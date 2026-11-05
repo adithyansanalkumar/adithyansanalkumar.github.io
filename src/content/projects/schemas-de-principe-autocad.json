@@ -1,0 +1,26 @@
+{
+  "order": 6,
+  "hidden": false,
+  "title_fr": "Schémas de principe",
+  "title_en": "Schematic diagrams",
+  "category": "cad",
+  "art": "cad",
+  "year": "",
+  "status_fr": "",
+  "status_en": "",
+  "tools": [
+    "AutoCAD"
+  ],
+  "summary_fr": "Série de schémas de principe hydrauliques et aérauliques réalisés sur AutoCAD.",
+  "summary_en": "A set of hydronic and air schematic diagrams drawn in AutoCAD.",
+  "context_fr": "",
+  "context_en": "",
+  "mission_fr": "",
+  "mission_en": "",
+  "highlights_fr": [],
+  "highlights_en": [],
+  "cover": "",
+  "gallery": [],
+  "model": "",
+  "links": []
+}

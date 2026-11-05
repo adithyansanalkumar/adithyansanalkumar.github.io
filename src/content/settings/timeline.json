@@ -1,0 +1,102 @@
+{
+  "items": [
+    {
+      "kind": "work",
+      "current": true,
+      "period_fr": "Actuellement",
+      "period_en": "Currently",
+      "title_fr": "Technicien Bureau d'Études CVC",
+      "title_en": "HVAC Design Office Technician",
+      "org": "Derichebourg Énergie",
+      "place": "",
+      "points_fr": [
+        "Études et modélisation BIM des installations CVC",
+        "Développement d’outils pyRevit pour le bureau d’études"
+      ],
+      "points_en": [
+        "HVAC studies and BIM modelling",
+        "Building pyRevit tools for the design office"
+      ]
+    },
+    {
+      "kind": "school",
+      "current": false,
+      "period_fr": "Formation",
+      "period_en": "Education",
+      "title_fr": "Licence BIM CVC",
+      "title_en": "Bachelor’s degree — HVAC BIM",
+      "org": "Licence professionnelle",
+      "place": "",
+      "points_fr": [],
+      "points_en": []
+    },
+    {
+      "kind": "school",
+      "current": false,
+      "period_fr": "2025 — 2026",
+      "period_en": "2025 — 2026",
+      "title_fr": "BTS FED — Génie Climatique et Fluidique",
+      "title_en": "BTS FED — HVAC & Fluid Engineering",
+      "org": "Lycée Raspail",
+      "place": "Paris 14e",
+      "points_fr": [
+        "Projet de 120 h+ sur Revit : Groupe scolaire Verfeil",
+        "Projet création d’entreprise : audit technique de chaufferies"
+      ],
+      "points_en": [
+        "120h+ Revit project: Verfeil school complex",
+        "Business-creation project: technical audit of boiler rooms"
+      ]
+    },
+    {
+      "kind": "work",
+      "current": false,
+      "period_fr": "Stage",
+      "period_en": "Internship",
+      "title_fr": "Stagiaire Maintenance & Performance Énergétique",
+      "title_en": "Maintenance & Energy Performance Intern",
+      "org": "Dalkia",
+      "place": "",
+      "points_fr": [
+        "Suivi et maintenance des installations CVC",
+        "Relevés techniques sur site",
+        "Normes de sécurité et procédures d’exploitation"
+      ],
+      "points_en": [
+        "Monitoring and maintenance of HVAC installations",
+        "On-site technical surveys",
+        "Safety standards and operating procedures"
+      ]
+    },
+    {
+      "kind": "work",
+      "current": false,
+      "period_fr": "2024",
+      "period_en": "2024",
+      "title_fr": "Agent Logistique — JO Paris 2024",
+      "title_en": "Logistics Agent — Paris 2024 Olympics",
+      "org": "Aéroport Charles de Gaulle",
+      "place": "",
+      "points_fr": [
+        "Gestion des bagages et équipements sportifs",
+        "Accueil et orientation des athlètes internationaux"
+      ],
+      "points_en": [
+        "Handling of luggage and sports equipment",
+        "Assisting international athletes"
+      ]
+    },
+    {
+      "kind": "school",
+      "current": false,
+      "period_fr": "2021 — 2023",
+      "period_en": "2021 — 2023",
+      "title_fr": "BAC STI2D — Énergie & Environnement",
+      "title_en": "STI2D Baccalaureate — Energy & Environment",
+      "org": "Le Raincy (93)",
+      "place": "",
+      "points_fr": [],
+      "points_en": []
+    }
+  ]
+}

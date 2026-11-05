@@ -1,0 +1,26 @@
+{
+  "order": 2,
+  "hidden": false,
+  "title_fr": "Groupe scolaire Verfeil",
+  "title_en": "Verfeil school complex",
+  "category": "bim",
+  "art": "bim",
+  "year": "2025 — 2026",
+  "status_fr": "Projet BTS — 120 h+",
+  "status_en": "BTS project — 120h+",
+  "tools": [
+    "Revit"
+  ],
+  "summary_fr": "Modélisation BIM des installations CVC d’un groupe scolaire, réalisée sur plus de 120 heures.",
+  "summary_en": "BIM modelling of the HVAC systems of a school complex, over 120+ hours of work.",
+  "context_fr": "",
+  "context_en": "",
+  "mission_fr": "Modélisation des réseaux CVC sur Revit dans le cadre du projet de 120 h du BTS FED.",
+  "mission_en": "Modelling the HVAC networks in Revit as part of the 120-hour BTS FED project.",
+  "highlights_fr": [],
+  "highlights_en": [],
+  "cover": "",
+  "gallery": [],
+  "model": "",
+  "links": []
+}

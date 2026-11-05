@@ -163,23 +163,52 @@ if (heroLines.length && !reduce) {
   tl.from(heroLines, { yPercent: 110, duration: 1.3, stagger: 0.12 })
     .from('[data-hero-item]', { y: 24, opacity: 0, duration: 1, stagger: 0.08 }, '-=0.9');
 
-  // Draw every line of the hero schematic
-  const drawPaths = $$<SVGGeometryElement>('.hd [data-draw] path, .hd [data-draw] rect, .hd [data-draw] circle, .hd .duct');
-  drawPaths.forEach((p) => {
-    const len = p.getTotalLength ? p.getTotalLength() : 600;
-    p.style.strokeDasharray = `${len}`;
-    p.style.strokeDashoffset = `${len}`;
-  });
-  tl.to(drawPaths, { strokeDashoffset: 0, duration: 1.6, stagger: 0.025, ease: 'power2.inOut' }, 0.2);
-  tl.from('.hd .flow, .hd text, .hd__fan', { opacity: 0, duration: 0.8, stagger: 0.02 }, 1.2);
-  tl.add(() => drawPaths.forEach((p) => (p.style.strokeDasharray = '')), '>');
+  tl.from('.h3d__hud', { opacity: 0, duration: 1.2 }, 0.6);
+}
 
-  // Gentle parallax of the drawing while leaving the hero
-  gsap.to('[data-hero-art]', {
-    yPercent: 12,
-    ease: 'none',
-    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
-  });
+/* ---------- Hero 3D BIM scene (three.js, loaded on demand) ---------- */
+const h3dHost = $('[data-hero3d]');
+if (h3dHost) {
+  const az = $('[data-h3d-az]', h3dHost);
+  const ex = $('[data-h3d-ex]', h3dHost);
+  const bar = $('[data-h3d-bar]', h3dHost);
+  import('./hero3d')
+    .then(({ initHero3D }) => {
+      const scene3d = initHero3D(h3dHost, {
+        reduce,
+        onFrame: (deg, e) => {
+          if (az) az.textContent = `${String(Math.round(deg)).padStart(3, '0')}°`;
+          if (ex) ex.textContent = `${Math.round(e * 100)}%`;
+          if (bar) bar.style.transform = `scaleX(${e})`;
+        },
+      });
+      if (!scene3d) return;
+      const mm = gsap.matchMedia();
+      // Desktop: pin the hero and explode the model while scrolling
+      mm.add('(min-width: 901px) and (prefers-reduced-motion: no-preference)', () => {
+        ScrollTrigger.create({
+          trigger: '.hero',
+          start: 'top top',
+          end: '+=85%',
+          pin: true,
+          scrub: true,
+          onUpdate: (self) => scene3d.setExplode(self.progress),
+        });
+      });
+      // Mobile / reduced motion: explode as the hero scrolls away
+      mm.add('(max-width: 900px), (prefers-reduced-motion: reduce)', () => {
+        ScrollTrigger.create({
+          trigger: '.hero',
+          start: 'top top',
+          end: 'bottom top',
+          onUpdate: (self) => scene3d.setExplode(self.progress * 1.4),
+        });
+      });
+      ScrollTrigger.refresh();
+    })
+    .catch(() => {
+      /* keep the SVG fallback */
+    });
 }
 
 /* ---------- Marquee driven by scroll ---------- */
@@ -379,6 +408,42 @@ $$<HTMLButtonElement>('[data-copy]').forEach((btn) => {
     setTimeout(() => label && (label.textContent = original), 2200);
   });
 });
+
+/* ---------- Contact form (Web3Forms) ---------- */
+const cform = $<HTMLFormElement>('[data-cform]');
+if (cform) {
+  const btn = $<HTMLButtonElement>('[data-cform-btn]', cform)!;
+  const label = $('[data-cform-label]', cform)!;
+  const status = $('[data-cform-status]', cform)!;
+  const idle = label.textContent || '';
+  cform.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!cform.reportValidity()) return;
+    btn.disabled = true;
+    label.textContent = cform.dataset.sending!;
+    status.textContent = '';
+    status.className = 'cform__status';
+    try {
+      const res = await fetch(cform.action, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: new FormData(cform),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || json.success === false) throw new Error(json.message || res.statusText);
+      status.textContent = cform.dataset.sent!;
+      status.classList.add('ok');
+      cform.reset();
+      (window as any).goatcounter?.count?.({ path: 'contact-form-sent', title: 'Contact form sent', event: true });
+    } catch {
+      status.textContent = cform.dataset.failed!;
+      status.classList.add('err');
+    } finally {
+      btn.disabled = false;
+      label.textContent = idle;
+    }
+  });
+}
 
 /* ---------- Lightbox (project galleries) ---------- */
 const dlg = $<HTMLDialogElement>('[data-lightbox]');

@@ -1,0 +1,32 @@
+{
+  "order": 3,
+  "hidden": false,
+  "title_fr": "Habitat Jeune — 20 logements",
+  "title_en": "Habitat Jeune — 20 dwellings",
+  "category": "bim",
+  "art": "bim",
+  "year": "",
+  "status_fr": "",
+  "status_en": "",
+  "tools": [
+    "Revit"
+  ],
+  "summary_fr": "Maquette BIM CVC d’une construction de 20 logements pour jeunes.",
+  "summary_en": "HVAC BIM model for a new 20-unit youth housing building.",
+  "context_fr": "",
+  "context_en": "",
+  "mission_fr": "",
+  "mission_en": "",
+  "highlights_fr": [],
+  "highlights_en": [],
+  "cover": "",
+  "gallery": [],
+  "model": "",
+  "links": [
+    {
+      "label_fr": "Dossier du projet (Google Drive)",
+      "label_en": "Project folder (Google Drive)",
+      "url": "https://drive.google.com/drive/folders/1Vm_DYYMnc-FaBF2Xg-dyiPL_FC1Y6XCO"
+    }
+  ]
+}

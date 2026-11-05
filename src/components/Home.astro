@@ -2,17 +2,14 @@
 import TitleBlock from './TitleBlock.astro';
 import HeroDrawing from './HeroDrawing.astro';
 import ProjectCard from './ProjectCard.astro';
-import { ui, profile, timeline, expertise, tools, type Lang } from '../data/site';
+import { ui, profile, timeline, expertise, tools, stats, type Lang } from '../data/site';
 import { projects, categories, type Category } from '../data/projects';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = ui[lang];
 const usedCats = [...new Set(projects.map((p) => p.category))] as Category[];
-const marquee =
-  lang === 'fr'
-    ? ['Chauffage', 'Ventilation', 'Climatisation', 'BIM', 'Revit', 'Bilans thermiques', 'Schémas de principe', 'pyRevit']
-    : ['Heating', 'Ventilation', 'Air conditioning', 'BIM', 'Revit', 'Heat loads', 'Schematics', 'pyRevit'];
+const marquee: string[] = t.marquee || [];
 ---
 
 <!-- ============ HERO ============ -->
@@ -36,14 +33,40 @@ const marquee =
           {t.hero.ctaWorks}
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" /></svg>
         </a>
-        <a class="btn" href={profile.cvUrl} target="_blank" rel="noopener">
+        <a class="btn" href={profile.cvUrl} target="_blank" rel="noopener" data-goatcounter-click="cv-download" data-goatcounter-title="CV (hero)">
           {t.hero.ctaCv}
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7zM14 3v5h5M10 14l3 3 3-3M13 10v7" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
         </a>
       </div>
     </div>
     <div class="hero__art" data-hero-art>
-      <HeroDrawing supply={t.hero.supply} ret={t.hero.ret} caption={lang === 'fr' ? 'Fig. 1 — CTA double flux, schéma de principe' : 'Fig. 1 — Dual-flow AHU, schematic'} />
+      <div class="h3d" data-hero3d>
+        <!-- HUD overlay (technical viewport frame) -->
+        <div class="h3d__hud" aria-hidden="true">
+          <span class="h3d__c tl"></span><span class="h3d__c tr"></span><span class="h3d__c bl"></span><span class="h3d__c br"></span>
+          <div class="h3d__top">
+            <span class="mono"><i class="rec"></i>{t.hero.hudModel}</span>
+            <span class="mono">{t.hero.hudAz} <b data-h3d-az>000°</b></span>
+          </div>
+          <div class="h3d__bot">
+            <div class="h3d__legend mono">
+              <span><i class="sw sw--c"></i>{t.hero.supply} 18 °C</span>
+              <span><i class="sw sw--w"></i>{t.hero.ret} 24 °C</span>
+              <span class="h3d__lv">{t.hero.hudLevels}</span>
+            </div>
+            <div class="h3d__gauge mono">
+              <span>{t.hero.hudExploded}</span>
+              <span class="h3d__bar"><i data-h3d-bar></i></span>
+              <b data-h3d-ex>0%</b>
+            </div>
+          </div>
+          <span class="h3d__hint mono">{t.hero.hudHint} ↓</span>
+        </div>
+        <!-- Fallback when WebGL / JS is unavailable -->
+        <div class="h3d__fallback">
+          <HeroDrawing supply={t.hero.supply} ret={t.hero.ret} caption={lang === 'fr' ? 'Fig. 1 — CTA double flux, schéma de principe' : 'Fig. 1 — Dual-flow AHU, schematic'} />
+        </div>
+      </div>
     </div>
   </div>
   <div class="wrap hero__foot">
@@ -82,11 +105,11 @@ const marquee =
   <!-- ===== Key figures ===== -->
   <section class="stats wrap" aria-label={t.stats.title}>
     <ul class="stats__row">
-      {t.stats.items.map((s) => (
+      {stats.map((s) => (
         <li class="stat" data-reveal>
           <span class="stat__v"><span data-count={s.value}>{s.value}</span>{s.suffix}</span>
-          <span class="stat__l">{s.label}</span>
-          <span class="mono">{s.note}</span>
+          <span class="stat__l">{s.label[lang]}</span>
+          <span class="mono">{s.note[lang]}</span>
         </li>
       ))}
       <li class="stat" data-reveal>
@@ -195,21 +218,52 @@ const marquee =
       <div class="contact">
         <p class="contact__lead" data-reveal>{t.contact.lead}</p>
         <div class="contact__mail" data-reveal>
-          <a href={`mailto:${profile.email}`} class="contact__email">{profile.email}</a>
+          <a href={`mailto:${profile.email}`} class="contact__email" data-goatcounter-click="email">{profile.email}</a>
           <button type="button" class="btn" data-copy={profile.email} data-copied={t.contact.copied} data-copyfail={t.contact.copyFail}>
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="1" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="M16 8V4H4v12h4" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
             <span data-copy-label>{t.contact.copy}</span>
           </button>
         </div>
         <p class="sr-only" aria-live="polite" data-copy-status></p>
+        {profile.web3formsKey && (
+          <form class="cform" data-cform action="https://api.web3forms.com/submit" method="POST" data-reveal
+            data-sending={t.contact.sending} data-sent={t.contact.sent} data-failed={t.contact.failed}>
+            <h3 class="cform__t mono">{t.contact.formTitle}</h3>
+            <input type="hidden" name="access_key" value={profile.web3formsKey} />
+            <input type="hidden" name="subject" value={lang === 'fr' ? 'Nouveau message depuis le portfolio' : 'New message from the portfolio'} />
+            <input type="hidden" name="from_name" value="Portfolio" />
+            <input type="checkbox" name="botcheck" class="cform__hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <div class="cform__row">
+              <label class="cform__f">
+                <span class="mono">{t.contact.name}</span>
+                <input name="name" type="text" required autocomplete="name" maxlength="120" />
+              </label>
+              <label class="cform__f">
+                <span class="mono">{t.contact.yourEmail}</span>
+                <input name="email" type="email" required autocomplete="email" maxlength="200" />
+              </label>
+            </div>
+            <label class="cform__f">
+              <span class="mono">{t.contact.message}</span>
+              <textarea name="message" required rows="5" maxlength="5000"></textarea>
+            </label>
+            <div class="cform__foot">
+              <button class="btn btn--solid" type="submit" data-cform-btn>
+                <span data-cform-label>{t.contact.send}</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" /></svg>
+              </button>
+              <p class="cform__status" role="status" aria-live="polite" data-cform-status></p>
+            </div>
+          </form>
+        )}
         <dl class="contact__grid" data-reveal>
           <div>
             <dt class="mono">{t.contact.linkedin}</dt>
-            <dd><a href={profile.linkedin} target="_blank" rel="noopener">adithyan-sanal-kumar ↗</a></dd>
+            <dd><a href={profile.linkedin} target="_blank" rel="noopener" data-goatcounter-click="linkedin">adithyan-sanal-kumar ↗</a></dd>
           </div>
           <div>
             <dt class="mono">{t.contact.cv}</dt>
-            <dd><a href={profile.cvUrl} target="_blank" rel="noopener">{t.contact.cvLabel} ↗</a></dd>
+            <dd><a href={profile.cvUrl} target="_blank" rel="noopener" data-goatcounter-click="cv-download" data-goatcounter-title="CV (contact)">{t.contact.cvLabel} ↗</a></dd>
           </div>
           <div>
             <dt class="mono">{t.contact.location}</dt>
@@ -859,6 +913,210 @@ const marquee =
   @media (max-width: 700px) {
     .contact__grid {
       grid-template-columns: 1fr;
+    }
+  }
+  /* ---------- CONTACT FORM ---------- */
+  .cform {
+    margin-top: 48px;
+    display: grid;
+    gap: 16px;
+    padding: clamp(20px, 3vw, 32px);
+    border: 1px solid var(--line-2);
+    background: color-mix(in srgb, var(--bg) 80%, transparent);
+    max-width: 820px;
+  }
+  .cform__t {
+    color: var(--ink-2);
+  }
+  .cform__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .cform__f {
+    display: grid;
+    gap: 6px;
+  }
+  .cform input,
+  .cform textarea {
+    width: 100%;
+    font: inherit;
+    color: var(--ink);
+    background: var(--bg-2);
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    min-height: 48px;
+    transition: border-color 0.2s;
+  }
+  .cform textarea {
+    resize: vertical;
+    min-height: 140px;
+  }
+  .cform input:focus,
+  .cform textarea:focus {
+    border-color: var(--cool);
+  }
+  .cform__hp {
+    position: absolute;
+    left: -9999px;
+  }
+  .cform__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+  }
+  .cform__status {
+    font-size: 0.95rem;
+  }
+  .cform__status.ok {
+    color: var(--cool);
+  }
+  .cform__status.err {
+    color: var(--warm);
+  }
+  @media (max-width: 640px) {
+    .cform__row {
+      grid-template-columns: 1fr;
+    }
+  }
+  /* ---------- HERO 3D VIEWPORT ---------- */
+  .h3d {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    max-height: 76vh;
+    width: 100%;
+    margin-inline: auto;
+  }
+  .h3d :global(.h3d__canvas) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    opacity: 0;
+    transition: opacity 1s var(--ease);
+  }
+  .h3d:global(.is-3d) :global(.h3d__canvas) {
+    opacity: 1;
+  }
+  .h3d__fallback {
+    position: absolute;
+    inset: 8% 4%;
+    display: grid;
+    place-items: center;
+  }
+  .h3d:global(.is-3d) .h3d__fallback {
+    display: none;
+  }
+  .h3d__hud {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .h3d__c {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-color: var(--ink-3);
+    border-style: solid;
+    border-width: 0;
+  }
+  .h3d__c.tl { top: 0; left: 0; border-top-width: 1.5px; border-left-width: 1.5px; }
+  .h3d__c.tr { top: 0; right: 0; border-top-width: 1.5px; border-right-width: 1.5px; }
+  .h3d__c.bl { bottom: 0; left: 0; border-bottom-width: 1.5px; border-left-width: 1.5px; }
+  .h3d__c.br { bottom: 0; right: 0; border-bottom-width: 1.5px; border-right-width: 1.5px; }
+  .h3d__top,
+  .h3d__bot {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12px;
+  }
+  .h3d__top {
+    top: 12px;
+    align-items: flex-start;
+  }
+  .h3d__bot {
+    bottom: 12px;
+  }
+  .h3d b {
+    color: var(--ink);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+  .rec {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--warm);
+    margin-right: 8px;
+    animation: blink 1.4s steps(2, start) infinite;
+  }
+  @keyframes blink {
+    to { visibility: hidden; }
+  }
+  .h3d__legend {
+    display: grid;
+    gap: 4px;
+  }
+  .h3d__legend span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sw {
+    width: 18px;
+    height: 4px;
+    border-radius: 2px;
+  }
+  .sw--c { background: var(--cool); box-shadow: 0 0 10px var(--cool); }
+  .sw--w { background: var(--warm); box-shadow: 0 0 10px var(--warm); }
+  .h3d__lv { opacity: 0.8; }
+  .h3d__gauge {
+    display: grid;
+    justify-items: end;
+    gap: 6px;
+  }
+  .h3d__bar {
+    width: 110px;
+    height: 3px;
+    background: var(--line-2);
+    position: relative;
+    overflow: hidden;
+  }
+  .h3d__bar i {
+    position: absolute;
+    inset: 0;
+    background: var(--thermal);
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+  .h3d__hint {
+    position: absolute;
+    left: 50%;
+    top: 12px;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.6s;
+    white-space: nowrap;
+    display: none;
+  }
+  @media (max-width: 900px) {
+    .h3d {
+      aspect-ratio: 4 / 3.4;
+    }
+  }
+  @media (max-width: 600px) {
+    .h3d__lv,
+    .h3d__gauge > span:first-child {
+      display: none;
     }
   }
 </style>

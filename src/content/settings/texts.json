@@ -1,0 +1,276 @@
+{
+  "fr": {
+    "htmlLang": "fr",
+    "metaTitle": "Adithyan Sanal Kumar — Technicien Bureau d'Études CVC",
+    "metaDesc": "Portfolio d'Adithyan Sanal Kumar, technicien bureau d'études CVC chez Derichebourg Énergie : modélisation BIM Revit, bilans thermiques, schémas AutoCAD et outils pyRevit.",
+    "nav": {
+      "expertise": "Expertise",
+      "works": "Réalisations",
+      "path": "Parcours",
+      "contact": "Contact"
+    },
+    "skip": "Aller au contenu",
+    "menu": "Menu",
+    "themeToLight": "Passer en thème clair",
+    "themeToDark": "Passer en thème sombre",
+    "switchLang": "English version",
+    "hero": {
+      "plate": "Plan n° 01 — Lot CVC",
+      "role": "Technicien Bureau d'Études CVC",
+      "at": "chez",
+      "intro": "Je conçois et modélise des installations de chauffage, ventilation et climatisation — du bilan thermique à la maquette BIM — et je développe mes propres outils pour aller plus vite sur Revit.",
+      "ctaWorks": "Voir mes réalisations",
+      "ctaCv": "Télécharger le CV",
+      "supply": "Soufflage",
+      "ret": "Reprise",
+      "scroll": "Défiler",
+      "hudModel": "Maquette BIM — Lot CVC",
+      "hudLevels": "R+0 → R+2 · CTA en toiture",
+      "hudExploded": "Vue éclatée",
+      "hudAz": "Azimut",
+      "hudHint": "Défilez pour éclater la maquette"
+    },
+    "stats": {
+      "title": "Repères",
+      "projects": "projets présentés"
+    },
+    "sections": {
+      "expertise": {
+        "n": "02",
+        "title": "Expertise",
+        "sub": "Nomenclature des compétences"
+      },
+      "works": {
+        "n": "03",
+        "title": "Réalisations",
+        "sub": "Projets & études"
+      },
+      "path": {
+        "n": "04",
+        "title": "Parcours",
+        "sub": "Expérience & formation"
+      },
+      "tools": {
+        "n": "05",
+        "title": "Outils",
+        "sub": "Logiciels"
+      },
+      "contact": {
+        "n": "06",
+        "title": "Contact",
+        "sub": "Travaillons ensemble"
+      }
+    },
+    "table": {
+      "ref": "Réf.",
+      "domain": "Domaine",
+      "desc": "Description",
+      "tools": "Outils"
+    },
+    "filters": {
+      "all": "Tous"
+    },
+    "works": {
+      "open": "Voir le projet",
+      "empty": "Aucun projet dans cette catégorie pour le moment.",
+      "soon": "Visuels à venir"
+    },
+    "contact": {
+      "lead": "Un projet CVC, une question BIM, ou simplement envie d’échanger ?",
+      "copy": "Copier l’adresse",
+      "copied": "Adresse copiée",
+      "copyFail": "Copie impossible — sélectionnez l’adresse",
+      "email": "E-mail",
+      "linkedin": "LinkedIn",
+      "cv": "CV",
+      "cvLabel": "Télécharger le CV",
+      "location": "Localisation",
+      "formTitle": "Envoyer un message",
+      "name": "Nom",
+      "yourEmail": "Votre e-mail",
+      "message": "Message",
+      "send": "Envoyer",
+      "sending": "Envoi…",
+      "sent": "Merci ! Votre message a bien été envoyé. Je vous réponds rapidement.",
+      "failed": "L’envoi a échoué. Réessayez ou écrivez-moi directement par e-mail.",
+      "or": "ou écrivez directement à"
+    },
+    "project": {
+      "back": "Toutes les réalisations",
+      "year": "Année",
+      "category": "Catégorie",
+      "tools": "Outils",
+      "status": "Statut",
+      "context": "Contexte",
+      "mission": "Ma mission",
+      "highlights": "Points clés",
+      "model": "Maquette 3D",
+      "modelHint": "Faites glisser pour tourner · molette pour zoomer",
+      "modelSoon": "Maquette 3D interactive bientôt disponible",
+      "modelLoad": "Charger la maquette 3D",
+      "gallery": "Galerie",
+      "gallerySoon": "Les visuels de ce projet seront ajoutés prochainement.",
+      "links": "Documents",
+      "next": "Projet suivant",
+      "close": "Fermer"
+    },
+    "footer": {
+      "rights": "Tous droits réservés",
+      "top": "Haut de page",
+      "built": "Conçu & développé avec soin"
+    },
+    "level": "Niv.",
+    "notFound": {
+      "title": "Plan introuvable",
+      "text": "Cette page n’existe pas ou a été déplacée.",
+      "home": "Retour à l’accueil"
+    },
+    "marquee": [
+      "Chauffage",
+      "Ventilation",
+      "Climatisation",
+      "BIM",
+      "Revit",
+      "Bilans thermiques",
+      "Schémas de principe",
+      "pyRevit"
+    ]
+  },
+  "en": {
+    "htmlLang": "en",
+    "metaTitle": "Adithyan Sanal Kumar — HVAC Design Office Technician",
+    "metaDesc": "Portfolio of Adithyan Sanal Kumar, HVAC design office technician at Derichebourg Énergie: Revit BIM modelling, heat-load calculations, AutoCAD schematics and pyRevit tools.",
+    "nav": {
+      "expertise": "Expertise",
+      "works": "Work",
+      "path": "Career",
+      "contact": "Contact"
+    },
+    "skip": "Skip to content",
+    "menu": "Menu",
+    "themeToLight": "Switch to light theme",
+    "themeToDark": "Switch to dark theme",
+    "switchLang": "Version française",
+    "hero": {
+      "plate": "Drawing no. 01 — HVAC",
+      "role": "HVAC Design Office Technician",
+      "at": "at",
+      "intro": "I design and model heating, ventilation and air-conditioning systems — from heat-load calculations to the BIM model — and I build my own tools to work faster in Revit.",
+      "ctaWorks": "See my work",
+      "ctaCv": "Download CV",
+      "supply": "Supply",
+      "ret": "Return",
+      "scroll": "Scroll",
+      "hudModel": "BIM model — HVAC",
+      "hudLevels": "Levels 0 → 2 · rooftop AHU",
+      "hudExploded": "Exploded view",
+      "hudAz": "Azimuth",
+      "hudHint": "Scroll to explode the model"
+    },
+    "stats": {
+      "title": "Key figures",
+      "projects": "projects shown"
+    },
+    "sections": {
+      "expertise": {
+        "n": "02",
+        "title": "Expertise",
+        "sub": "Skills schedule"
+      },
+      "works": {
+        "n": "03",
+        "title": "Work",
+        "sub": "Projects & studies"
+      },
+      "path": {
+        "n": "04",
+        "title": "Career",
+        "sub": "Experience & education"
+      },
+      "tools": {
+        "n": "05",
+        "title": "Tools",
+        "sub": "Software"
+      },
+      "contact": {
+        "n": "06",
+        "title": "Contact",
+        "sub": "Let’s work together"
+      }
+    },
+    "table": {
+      "ref": "Ref.",
+      "domain": "Field",
+      "desc": "Description",
+      "tools": "Tools"
+    },
+    "filters": {
+      "all": "All"
+    },
+    "works": {
+      "open": "View project",
+      "empty": "No project in this category yet.",
+      "soon": "Visuals coming soon"
+    },
+    "contact": {
+      "lead": "An HVAC project, a BIM question, or just want to talk?",
+      "copy": "Copy address",
+      "copied": "Address copied",
+      "copyFail": "Could not copy — select the address",
+      "email": "Email",
+      "linkedin": "LinkedIn",
+      "cv": "CV",
+      "cvLabel": "Download CV",
+      "location": "Location",
+      "formTitle": "Send a message",
+      "name": "Name",
+      "yourEmail": "Your email",
+      "message": "Message",
+      "send": "Send",
+      "sending": "Sending…",
+      "sent": "Thank you! Your message has been sent. I’ll get back to you soon.",
+      "failed": "Sending failed. Please try again or email me directly.",
+      "or": "or write directly to"
+    },
+    "project": {
+      "back": "All work",
+      "year": "Year",
+      "category": "Category",
+      "tools": "Tools",
+      "status": "Status",
+      "context": "Context",
+      "mission": "My role",
+      "highlights": "Highlights",
+      "model": "3D model",
+      "modelHint": "Drag to rotate · scroll to zoom",
+      "modelSoon": "Interactive 3D model coming soon",
+      "modelLoad": "Load the 3D model",
+      "gallery": "Gallery",
+      "gallerySoon": "Visuals for this project will be added soon.",
+      "links": "Documents",
+      "next": "Next project",
+      "close": "Close"
+    },
+    "footer": {
+      "rights": "All rights reserved",
+      "top": "Back to top",
+      "built": "Designed & built with care"
+    },
+    "level": "Lvl.",
+    "notFound": {
+      "title": "Drawing not found",
+      "text": "This page does not exist or has moved.",
+      "home": "Back to home"
+    },
+    "marquee": [
+      "Heating",
+      "Ventilation",
+      "Air conditioning",
+      "BIM",
+      "Revit",
+      "Heat loads",
+      "Schematics",
+      "pyRevit"
+    ]
+  }
+}
