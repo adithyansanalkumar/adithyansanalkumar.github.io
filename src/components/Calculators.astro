@@ -97,7 +97,7 @@ const tabs = [
       </div>
 
       <!-- ===== Heat loss ===== -->
-      <div class="calc__panel" role="tabpanel" id="panel-heat" aria-labelledby="tab-heat" data-panel="heat" hidden>
+      <div role="tabpanel" id="panel-heat" aria-labelledby="tab-heat" data-panel="heat" class="calc__panel calc__panel--heat" hidden>
         <div class="calc__in calc__in--grid">
           <label class="fld"><span class="mono">{c.area}</span><span class="fld__row"><input type="number" min="1" step="1" value="250" data-in="a" inputmode="decimal" /><em>m²</em></span></label>
           <label class="fld"><span class="mono">{c.uValue}</span><span class="fld__row"><input type="number" min="0.05" step="0.05" value="0.6" data-in="u" inputmode="decimal" /><em>W/m²·K</em></span></label>
@@ -354,13 +354,39 @@ const tabs = [
   .calc__panel[hidden] {
     display: none;
   }
+  /* Heat loss: 5 inputs need the width → inputs + bar stacked left, results right */
+  .calc__panel--heat {
+    grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr);
+    grid-template-areas: 'in out' 'bar out';
+    align-items: start;
+  }
+  .calc__panel--heat > .calc__in {
+    grid-area: in;
+  }
+  .calc__panel--heat > .calc__viz {
+    grid-area: bar;
+  }
+  .calc__panel--heat > .calc__out {
+    grid-area: out;
+    align-self: center;
+  }
+  .calc__panel--heat .hbar__leg {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+  }
   .calc__in {
     display: grid;
     gap: 20px;
   }
   .calc__in--grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
+  }
+  .calc__in--grid :global(input),
+  .calc__in--grid :global(select) {
+    min-width: 0;
+    width: 100%;
   }
   .fld {
     display: grid;
@@ -627,6 +653,10 @@ const tabs = [
     .calc__in {
       grid-column: 1 / -1;
     }
+    .calc__panel--heat {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: 'in' 'bar' 'out';
+    }
     .units {
       grid-column: 1 / -1;
     }
@@ -643,6 +673,9 @@ const tabs = [
     }
     .calc__panel {
       grid-template-columns: 1fr;
+    }
+    .calc__panel--heat {
+      grid-template-areas: 'in' 'bar' 'out';
     }
     .calc__in--grid {
       grid-template-columns: 1fr;
