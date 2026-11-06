@@ -28,7 +28,8 @@
       "hudLevels": "R+0 → R+2 · CTA en toiture",
       "hudExploded": "Vue éclatée",
       "hudAz": "Azimut",
-      "hudHint": "Défilez pour éclater la maquette"
+      "hudHint": "Défilez pour éclater la maquette",
+      "heat": "Eau de chauffage"
     },
     "stats": {
       "title": "Repères",
@@ -220,7 +221,8 @@
       "hudLevels": "Levels 0 → 2 · rooftop AHU",
       "hudExploded": "Exploded view",
       "hudAz": "Azimuth",
-      "hudHint": "Scroll to explode the model"
+      "hudHint": "Scroll to explode the model",
+      "heat": "Heating water"
     },
     "stats": {
       "title": "Key figures",

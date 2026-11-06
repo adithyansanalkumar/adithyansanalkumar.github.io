@@ -52,6 +52,7 @@ const marquee: string[] = t.marquee || [];
             <div class="h3d__legend mono">
               <span><i class="sw sw--c"></i>{t.hero.supply} 18 °C</span>
               <span><i class="sw sw--w"></i>{t.hero.ret} 24 °C</span>
+              {t.hero.heat && <span><i class="sw sw--h"></i>{t.hero.heat}</span>}
               <span class="h3d__lv">{t.hero.hudLevels}</span>
             </div>
             <div class="h3d__gauge mono">
@@ -1079,6 +1080,7 @@ const marquee: string[] = t.marquee || [];
   }
   .sw--c { background: var(--cool); box-shadow: 0 0 10px var(--cool); }
   .sw--w { background: var(--warm); box-shadow: 0 0 10px var(--warm); }
+  .sw--h { height: 2px; background: linear-gradient(var(--warm) 0 0) top / 100% 1px no-repeat, linear-gradient(var(--cool) 0 0) bottom / 100% 1px no-repeat; }
   .h3d__lv { opacity: 0.8; }
   .h3d__gauge {
     display: grid;
