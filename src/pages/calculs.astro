@@ -1,0 +1,10 @@
+---
+import Base from '../layouts/Base.astro';
+import CalcPage from '../components/CalcPage.astro';
+import { ui, calcUrl } from '../data/site';
+const t = ui.fr;
+---
+
+<Base lang="fr" title={`${t.sections.calc.title} — ${t.sections.calc.sub}`} description={t.calc.intro} altHref={calcUrl('en')}>
+  <CalcPage lang="fr" />
+</Base>

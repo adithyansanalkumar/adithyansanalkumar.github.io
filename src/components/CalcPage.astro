@@ -1,0 +1,31 @@
+---
+/* Stand-alone page wrapper for the HVAC calculators (/calculs/ and /en/calculations/). */
+import Calculators from './Calculators.astro';
+import { homeUrl, type Lang } from '../data/site';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+
+<div class="cp">
+  <div class="wrap">
+    <a class="cp__back mono" href={homeUrl(lang)}>← {lang === 'fr' ? 'Retour à l’accueil' : 'Back to home'}</a>
+  </div>
+  <Calculators lang={lang} />
+</div>
+
+<style>
+  .cp {
+    padding-top: 120px;
+  }
+  .cp__back {
+    display: inline-block;
+    padding: 8px 0;
+    text-decoration: none;
+  }
+  .cp__back:hover {
+    color: var(--ink);
+  }
+  .cp :global(#calculs) {
+    padding-top: 28px;
+  }
+</style>

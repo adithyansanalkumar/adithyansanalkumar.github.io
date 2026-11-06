@@ -46,22 +46,22 @@
         "sub": "Projets & études"
       },
       "path": {
-        "n": "05",
+        "n": "04",
         "title": "Parcours",
         "sub": "Expérience & formation"
       },
       "tools": {
-        "n": "06",
+        "n": "05",
         "title": "Outils",
         "sub": "Logiciels"
       },
       "contact": {
-        "n": "07",
+        "n": "06",
         "title": "Contact",
         "sub": "Travaillons ensemble"
       },
       "calc": {
-        "n": "04",
+        "n": "01",
         "title": "Calculs",
         "sub": "Outils de pré-dimensionnement"
       }
@@ -238,22 +238,22 @@
         "sub": "Projects & studies"
       },
       "path": {
-        "n": "05",
+        "n": "04",
         "title": "Career",
         "sub": "Experience & education"
       },
       "tools": {
-        "n": "06",
+        "n": "05",
         "title": "Tools",
         "sub": "Software"
       },
       "contact": {
-        "n": "07",
+        "n": "06",
         "title": "Contact",
         "sub": "Let’s work together"
       },
       "calc": {
-        "n": "04",
+        "n": "01",
         "title": "Calcs",
         "sub": "Pre-sizing tools"
       }

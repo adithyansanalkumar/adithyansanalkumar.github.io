@@ -3,7 +3,7 @@
    1. AutoCAD-style command line (Ctrl+K, "/" or the >_ button)
    2. Thermal-camera vision mode (IR button or THERMIQUE command)
    3. CAD crosshair cursor with live coordinates (mouse only)        */
-import { ui, profile, homeUrl, projectUrl, href, type Lang } from '../data/site';
+import { ui, profile, homeUrl, projectUrl, calcUrl, href, type Lang } from '../data/site';
 import { projects } from '../data/projects';
 interface Props { lang: Lang; altHref: string }
 const { lang, altHref } = Astro.props;
@@ -15,7 +15,7 @@ const commands = [
   { names: fr ? ['ACCUEIL', 'HOME'] : ['HOME', 'ACCUEIL'], desc: fr ? 'Haut de page / accueil' : 'Top of page / home', ...sec('top') },
   { names: ['EXPERTISE', 'COMPETENCES', 'SKILLS'], desc: t.sections.expertise.sub, ...sec('expertise') },
   { names: fr ? ['PROJETS', 'REALISATIONS', 'WORK'] : ['WORK', 'PROJECTS', 'PROJETS'], desc: t.sections.works.sub, ...sec('realisations') },
-  { names: fr ? ['CALCULS', 'CALC'] : ['CALC', 'CALCULS'], desc: t.sections.calc.sub, ...sec('calculs') },
+  { names: fr ? ['CALCULS', 'CALC'] : ['CALC', 'CALCULS'], desc: t.sections.calc.sub, type: 'go', target: calcUrl(lang) },
   { names: fr ? ['PARCOURS', 'CAREER'] : ['CAREER', 'PARCOURS'], desc: t.sections.path.sub, ...sec('parcours') },
   { names: fr ? ['LOGICIELS', 'OUTILS', 'TOOLS'] : ['TOOLS', 'SOFTWARE', 'LOGICIELS'], desc: t.sections.tools.sub, ...sec('outils') },
   { names: ['CONTACT'], desc: t.sections.contact.sub, ...sec('contact') },

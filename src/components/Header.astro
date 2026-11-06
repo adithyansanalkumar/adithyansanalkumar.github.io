@@ -1,16 +1,17 @@
 ---
-import { ui, profile, homeUrl, type Lang } from '../data/site';
+import { ui, profile, homeUrl, calcUrl, type Lang } from '../data/site';
 interface Props { lang: Lang; altHref: string; onHome: boolean }
 const { lang, altHref, onHome } = Astro.props;
 const t = ui[lang];
 const home = homeUrl(lang);
 const a = (id: string) => (onHome ? `#${id}` : `${home}#${id}`);
+const calcHref = calcUrl(lang);
+const onCalc = Astro.url.pathname.replace(/\/?$/, '/') === calcHref;
 const links = [
-  { id: 'expertise', label: t.nav.expertise, n: t.sections.expertise.n },
-  { id: 'realisations', label: t.nav.works, n: t.sections.works.n },
-  { id: 'calculs', label: t.sections.calc.title, n: t.sections.calc.n },
-  { id: 'parcours', label: t.nav.path, n: t.sections.path.n },
-  { id: 'contact', label: t.nav.contact, n: t.sections.contact.n },
+  { id: 'expertise', href: a('expertise'), label: t.nav.expertise, n: t.sections.expertise.n },
+  { id: 'realisations', href: a('realisations'), label: t.nav.works, n: t.sections.works.n },
+  { id: 'parcours', href: a('parcours'), label: t.nav.path, n: t.sections.path.n },
+  { id: 'contact', href: a('contact'), label: t.nav.contact, n: t.sections.contact.n },
 ];
 ---
 
@@ -28,11 +29,16 @@ const links = [
       <ul>
         {links.map((l) => (
           <li>
-            <a href={a(l.id)} data-navlink={l.id}>
+            <a href={l.href} data-navlink={l.id}>
               <span class="nav__i">{l.n}</span>{l.label}
             </a>
           </li>
         ))}
+        <li>
+          <a href={calcHref} class:list={['nav__page', { 'is-active': onCalc }]} aria-current={onCalc ? 'page' : undefined}>
+            <span class="nav__i">Σ</span>{t.sections.calc.title}
+          </a>
+        </li>
       </ul>
     </nav>
 

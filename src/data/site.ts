@@ -80,5 +80,6 @@ export const ui = textsData as Record<Lang, any>;
 export const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 export const href = (p: string) => `${base}${p.startsWith('/') ? p : '/' + p}`;
 export const homeUrl = (lang: Lang) => href(lang === 'fr' ? '/' : '/en/');
+export const calcUrl = (lang: Lang) => href(lang === 'fr' ? '/calculs/' : '/en/calculations/');
 export const projectUrl = (lang: Lang, slug: string) =>
   href(lang === 'fr' ? `/projets/${slug}/` : `/en/projects/${slug}/`);
