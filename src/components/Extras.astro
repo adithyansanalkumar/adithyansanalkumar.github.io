@@ -1,0 +1,510 @@
+---
+/* Site-wide extras:
+   1. AutoCAD-style command line (Ctrl+K, "/" or the >_ button)
+   2. Thermal-camera vision mode (IR button or THERMIQUE command)
+   3. CAD crosshair cursor with live coordinates (mouse only)        */
+import { ui, profile, homeUrl, projectUrl, href, type Lang } from '../data/site';
+import { projects } from '../data/projects';
+interface Props { lang: Lang; altHref: string }
+const { lang, altHref } = Astro.props;
+const t = ui[lang];
+const fr = lang === 'fr';
+const home = homeUrl(lang);
+const sec = (id: string) => ({ type: 'hash', target: `#${id}`, home: `${home}#${id}` });
+const commands = [
+  { names: fr ? ['ACCUEIL', 'HOME'] : ['HOME', 'ACCUEIL'], desc: fr ? 'Haut de page / accueil' : 'Top of page / home', ...sec('top') },
+  { names: ['EXPERTISE', 'COMPETENCES', 'SKILLS'], desc: t.sections.expertise.sub, ...sec('expertise') },
+  { names: fr ? ['PROJETS', 'REALISATIONS', 'WORK'] : ['WORK', 'PROJECTS', 'PROJETS'], desc: t.sections.works.sub, ...sec('realisations') },
+  { names: fr ? ['CALCULS', 'CALC'] : ['CALC', 'CALCULS'], desc: t.sections.calc.sub, ...sec('calculs') },
+  { names: fr ? ['PARCOURS', 'CAREER'] : ['CAREER', 'PARCOURS'], desc: t.sections.path.sub, ...sec('parcours') },
+  { names: fr ? ['LOGICIELS', 'OUTILS', 'TOOLS'] : ['TOOLS', 'SOFTWARE', 'LOGICIELS'], desc: t.sections.tools.sub, ...sec('outils') },
+  { names: ['CONTACT'], desc: t.sections.contact.sub, ...sec('contact') },
+  { names: ['CV'], desc: t.contact.cvLabel, type: 'url', target: profile.cvUrl },
+  { names: ['LINKEDIN'], desc: 'LinkedIn', type: 'url', target: profile.linkedin },
+  { names: fr ? ['EMAIL', 'MAIL'] : ['EMAIL', 'MAIL'], desc: profile.email, type: 'go', target: `mailto:${profile.email}` },
+  { names: fr ? ['THERMIQUE', 'IR', 'THERMAL'] : ['THERMAL', 'IR', 'THERMIQUE'], desc: t.thermal.toggle, type: 'thermal', target: '' },
+  { names: fr ? ['THEME', 'NUIT', 'JOUR'] : ['THEME', 'DARK', 'LIGHT'], desc: fr ? 'Basculer thème clair / sombre' : 'Toggle light / dark theme', type: 'theme', target: '' },
+  { names: fr ? ['EN', 'ENGLISH'] : ['FR', 'FRANCAIS'], desc: t.switchLang, type: 'go', target: altHref },
+  { names: ['ADMIN'], desc: fr ? 'Panneau d’administration' : 'Admin panel', type: 'go', target: href('/admin/') },
+  ...projects.map((p, i) => ({
+    names: [`P${String(i + 1).padStart(2, '0')}`, p.title[lang].toUpperCase()],
+    desc: p.summary[lang],
+    type: 'go',
+    target: projectUrl(lang, p.slug),
+  })),
+  { names: fr ? ['AIDE', 'HELP', '?'] : ['HELP', 'AIDE', '?'], desc: fr ? 'Liste des commandes' : 'List all commands', type: 'help', target: '' },
+];
+---
+
+<!-- ============ COMMAND LINE ============ -->
+<dialog class="cmd" data-cmd aria-label={t.cmd.button} data-nomatch={t.cmd.noMatch}>
+  <form method="dialog" class="cmd__in" data-cmd-form>
+    <label class="cmd__prompt mono" for="cmd-input">{t.cmd.prompt}</label>
+    <input id="cmd-input" type="text" autocomplete="off" spellcheck="false" placeholder={t.cmd.placeholder} data-cmd-input
+      role="combobox" aria-expanded="true" aria-controls="cmd-list" aria-autocomplete="list" />
+    <kbd class="mono">Esc</kbd>
+  </form>
+  <ul class="cmd__list" id="cmd-list" role="listbox" data-cmd-list></ul>
+  <p class="cmd__hint mono">{t.cmd.hint}</p>
+  <script type="application/json" data-cmd-data set:html={JSON.stringify(commands)} />
+</dialog>
+
+<!-- ============ THERMAL VISION ============ -->
+<svg class="sr-only" aria-hidden="true" focusable="false">
+  <filter id="thermal-filter" color-interpolation-filters="sRGB">
+    <feColorMatrix type="matrix" values="0.3 0.59 0.11 0 0  0.3 0.59 0.11 0 0  0.3 0.59 0.11 0 0  0 0 0 1 0" />
+    <feComponentTransfer>
+      <feFuncR type="table" tableValues="0.02 0.35 0.75 0.95 1 1 1" />
+      <feFuncG type="table" tableValues="0 0 0.05 0.3 0.6 0.88 1" />
+      <feFuncB type="table" tableValues="0.12 0.45 0.45 0.1 0 0.25 0.9" />
+    </feComponentTransfer>
+  </filter>
+</svg>
+<div class="ir-ui" aria-hidden="true">
+  <div class="ir-ui__bar"></div>
+  <div class="ir-ui__lbl mono"><span>38 °C</span><span>25 °C</span><span>12 °C</span></div>
+  <div class="ir-ui__rec mono"><i></i>IR · {t.thermal.scale} 12–38 °C</div>
+</div>
+<p class="sr-only" aria-live="polite" data-thermal-status data-on={t.thermal.on} data-off={t.thermal.off}></p>
+
+<!-- ============ CAD CURSOR ============ -->
+<div class="cad" aria-hidden="true" data-cad>
+  <span class="cad__h"></span><span class="cad__v"></span><span class="cad__box"></span>
+  <span class="cad__xy mono" data-cad-xy>X 0000 · Y 0000</span>
+</div>
+
+<script>
+  type Cmd = { names: string[]; desc: string; type: string; target: string; home?: string };
+  const html = document.documentElement;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------------- thermal vision ---------------- */
+  const irBtns = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-thermal-toggle]'));
+  const irStatus = document.querySelector<HTMLElement>('[data-thermal-status]');
+  function setThermal(on: boolean, announce = true) {
+    html.classList.toggle('thermal', on);
+    irBtns.forEach((b) => b.setAttribute('aria-pressed', String(on)));
+    try {
+      localStorage.setItem('thermal', on ? '1' : '0');
+    } catch {}
+    if (announce && irStatus) irStatus.textContent = on ? irStatus.dataset.on! : irStatus.dataset.off!;
+  }
+  let savedIR = false;
+  try {
+    savedIR = localStorage.getItem('thermal') === '1';
+  } catch {}
+  if (savedIR) setThermal(true, false);
+  irBtns.forEach((b) => b.addEventListener('click', () => setThermal(!html.classList.contains('thermal'))));
+
+  /* ---------------- command line ---------------- */
+  const dlg = document.querySelector<HTMLDialogElement>('[data-cmd]')!;
+  const input = dlg.querySelector<HTMLInputElement>('[data-cmd-input]')!;
+  const list = dlg.querySelector<HTMLUListElement>('[data-cmd-list]')!;
+  const cmds: Cmd[] = JSON.parse(dlg.querySelector('[data-cmd-data]')!.textContent || '[]');
+  let shown: Cmd[] = [];
+  let active = 0;
+  const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().trim();
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+
+  function render() {
+    const q = norm(input.value);
+    shown = q ? cmds.filter((c) => c.names.some((n) => norm(n).includes(q)) || norm(c.desc).includes(q)) : cmds;
+    // exact / prefix matches first
+    shown = [...shown].sort((a, b) => {
+      const sa = a.names.some((n) => norm(n).startsWith(q)) ? 0 : 1;
+      const sb = b.names.some((n) => norm(n).startsWith(q)) ? 0 : 1;
+      return sa - sb;
+    });
+    active = Math.min(active, Math.max(0, shown.length - 1));
+    list.innerHTML = shown.length
+      ? shown
+          .map(
+            (c, i) =>
+              `<li role="option" id="cmd-o${i}" aria-selected="${i === active}" data-i="${i}"><b>${esc(c.names[0])}</b><span>${esc(c.desc)}</span>${
+                c.names.length > 1 ? `<em>${esc(c.names.slice(1, 3).join(' · '))}</em>` : ''
+              }</li>`,
+          )
+          .join('')
+      : `<li class="cmd__none">${esc(dlg.dataset.nomatch || '')}</li>`;
+    input.setAttribute('aria-activedescendant', shown.length ? `cmd-o${active}` : '');
+    list.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: 'nearest' });
+  }
+
+  function open() {
+    if (dlg.open) return;
+    input.value = '';
+    active = 0;
+    render();
+    dlg.showModal();
+    input.focus();
+  }
+  function run(c: Cmd | undefined) {
+    if (!c) return;
+    if (c.type === 'help') {
+      input.value = '';
+      render();
+      input.focus();
+      return;
+    }
+    dlg.close();
+    if (c.type === 'hash') {
+      const el = document.querySelector(c.target);
+      if (el) {
+        const a = document.createElement('a');
+        a.href = c.target === '#top' ? '#main' : c.target;
+        document.body.append(a);
+        a.click();
+        a.remove();
+      } else location.href = c.home || c.target;
+    } else if (c.type === 'url') window.open(c.target, '_blank', 'noopener');
+    else if (c.type === 'go') location.href = c.target;
+    else if (c.type === 'thermal') setThermal(!html.classList.contains('thermal'));
+    else if (c.type === 'theme') document.querySelector<HTMLButtonElement>('[data-theme-toggle]')?.click();
+  }
+
+  input.addEventListener('input', () => {
+    active = 0;
+    render();
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (!shown.length) return;
+      active = (active + (e.key === 'ArrowDown' ? 1 : -1) + shown.length) % shown.length;
+      render();
+    } else if (e.key === 'Tab' && shown[active]) {
+      e.preventDefault();
+      input.value = shown[active].names[0];
+      render();
+    }
+  });
+  dlg.querySelector('[data-cmd-form]')!.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const q = norm(input.value);
+    const exact = cmds.find((c) => c.names.some((n) => norm(n) === q));
+    run(exact || shown[active]);
+  });
+  list.addEventListener('click', (e) => {
+    const li = (e.target as HTMLElement).closest<HTMLElement>('[data-i]');
+    if (li) run(shown[Number(li.dataset.i)]);
+  });
+  dlg.addEventListener('click', (e) => {
+    if (e.target === dlg) dlg.close();
+  });
+  document.querySelectorAll('[data-cmd-open]').forEach((b) => b.addEventListener('click', open));
+  document.addEventListener('keydown', (e) => {
+    const tgt = e.target as HTMLElement;
+    const typing = tgt.closest('input, textarea, select, [contenteditable="true"]');
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      dlg.open ? dlg.close() : open();
+    } else if (e.key === '/' && !typing && !dlg.open) {
+      e.preventDefault();
+      open();
+    }
+  });
+
+  /* ---------------- CAD crosshair cursor ---------------- */
+  const cad = document.querySelector<HTMLElement>('[data-cad]')!;
+  const xy = cad.querySelector<HTMLElement>('[data-cad-xy]')!;
+  if (matchMedia('(pointer: fine)').matches && !reduce) {
+    html.classList.add('cad-on');
+    let x = -100,
+      y = -100,
+      raf = 0;
+    const draw = () => {
+      raf = 0;
+      cad.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+      xy.textContent = `X ${String(Math.round(x)).padStart(4, '0')} · Y ${String(Math.round(y + window.scrollY)).padStart(4, '0')}`;
+    };
+    window.addEventListener(
+      'pointermove',
+      (e) => {
+        if (e.pointerType !== 'mouse') return;
+        x = e.clientX;
+        y = e.clientY;
+        const t = e.target as HTMLElement;
+        cad.classList.add('is-on');
+        cad.classList.toggle('is-link', !!t.closest('a, button, [role="tab"], label, select, summary, input[type="range"]'));
+        cad.classList.toggle('is-text', !!t.closest('input:not([type="range"]), textarea, [contenteditable="true"]') || !!document.querySelector('dialog[open]'));
+        if (!raf) raf = requestAnimationFrame(draw);
+      },
+      { passive: true },
+    );
+    document.addEventListener('pointerleave', () => cad.classList.remove('is-on'));
+    window.addEventListener('blur', () => cad.classList.remove('is-on'));
+    window.addEventListener('pointerdown', () => cad.classList.add('is-down'));
+    window.addEventListener('pointerup', () => cad.classList.remove('is-down'));
+  }
+</script>
+
+<style>
+  /* ---------- command line ---------- */
+  .cmd {
+    width: min(720px, calc(100vw - 32px));
+    max-height: min(70vh, 640px);
+    margin: auto auto 12vh;
+    padding: 0;
+    border: 1px solid var(--line-2);
+    background: color-mix(in srgb, var(--bg) 94%, transparent);
+    color: var(--ink);
+    box-shadow: 0 40px 120px -20px rgba(0, 0, 0, 0.7);
+    overflow: hidden;
+    cursor: auto;
+  }
+  .cmd[open] {
+    display: flex;
+    flex-direction: column;
+    animation: cmdIn 0.35s var(--ease);
+  }
+  @keyframes cmdIn {
+    from {
+      opacity: 0;
+      transform: translateY(16px) scale(0.98);
+    }
+  }
+  .cmd::backdrop {
+    background: rgba(3, 8, 18, 0.6);
+    backdrop-filter: blur(3px);
+  }
+  .cmd__in {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 14px;
+    border-bottom: 1px solid var(--line-2);
+    background: var(--bg-2);
+  }
+  .cmd__prompt {
+    color: var(--warm);
+    white-space: nowrap;
+  }
+  .cmd__in input {
+    flex: 1;
+    min-width: 0;
+    min-height: 56px;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    font: 500 1.05rem var(--font-mono);
+    text-transform: uppercase;
+    outline: none;
+    caret-color: var(--warm);
+  }
+  .cmd__in input::placeholder {
+    text-transform: none;
+    color: var(--ink-3);
+  }
+  .cmd kbd {
+    font-size: 0.7rem;
+    padding: 3px 6px;
+    border: 1px solid var(--line-2);
+    color: var(--ink-3);
+  }
+  .cmd__list {
+    overflow-y: auto;
+    padding: 6px;
+    flex: 1;
+  }
+  .cmd__list :global(li) {
+    display: grid;
+    grid-template-columns: minmax(110px, auto) 1fr auto;
+    gap: 14px;
+    align-items: baseline;
+    padding: 10px 12px;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+  }
+  .cmd__list :global(li b) {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: var(--cool);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 260px;
+  }
+  .cmd__list :global(li span) {
+    color: var(--ink-2);
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .cmd__list :global(li em) {
+    font-style: normal;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--ink-3);
+    white-space: nowrap;
+  }
+  .cmd__list :global(li[aria-selected='true']),
+  .cmd__list :global(li:hover) {
+    background: var(--surface);
+    border-left-color: var(--warm);
+  }
+  .cmd__list :global(.cmd__none) {
+    display: block;
+    color: var(--warm);
+    cursor: default;
+  }
+  .cmd__hint {
+    padding: 10px 14px;
+    border-top: 1px solid var(--line-2);
+    text-transform: none;
+  }
+  @media (max-width: 600px) {
+    .cmd {
+      margin: 72px auto auto;
+    }
+    .cmd__list :global(li) {
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+    .cmd__list :global(li em) {
+      display: none;
+    }
+  }
+
+  /* ---------- thermal vision ---------- */
+  :global(html.thermal) {
+    filter: url(#thermal-filter);
+  }
+  .ir-ui {
+    position: fixed;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 45;
+    display: none;
+    grid-template-columns: auto auto;
+    gap: 8px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    pointer-events: none;
+  }
+  :global(html.thermal) .ir-ui {
+    display: grid;
+  }
+  .ir-ui__bar {
+    width: 10px;
+    height: 220px;
+    background: linear-gradient(#fff, #ffe066, #ff8c1a, #d7263d, #6a0dad, #0b0221);
+    border: 1px solid #fff4;
+  }
+  .ir-ui__lbl {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #fff;
+  }
+  .ir-ui__rec {
+    grid-column: 1 / -1;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ir-ui__rec i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ff3b3b;
+    animation: irb 1s steps(2, start) infinite;
+  }
+  @keyframes irb {
+    to {
+      visibility: hidden;
+    }
+  }
+  @media (max-width: 760px) {
+    .ir-ui {
+      right: 8px;
+    }
+    .ir-ui__bar {
+      height: 140px;
+    }
+  }
+
+  /* ---------- CAD cursor ---------- */
+  :global(html.cad-on),
+  :global(html.cad-on *) {
+    cursor: none !important;
+  }
+  :global(html.cad-on) :global(:is(input:not([type='range']), textarea, [contenteditable='true'], dialog, dialog *)) {
+    cursor: auto !important;
+  }
+  :global(html.cad-on) :global(:is(input:not([type='range']), textarea)) {
+    cursor: text !important;
+  }
+  .cad {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    will-change: transform;
+  }
+  .cad.is-on {
+    opacity: 1;
+  }
+  .cad.is-text {
+    opacity: 0;
+  }
+  .cad__h,
+  .cad__v {
+    position: absolute;
+    background: var(--ink);
+    opacity: 0.75;
+  }
+  .cad__h {
+    width: 64px;
+    height: 1px;
+    left: -32px;
+    top: 0;
+  }
+  .cad__v {
+    width: 1px;
+    height: 64px;
+    left: 0;
+    top: -32px;
+  }
+  .cad__box {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    left: -5px;
+    top: -5px;
+    border: 1px solid var(--ink);
+    transition: all 0.25s var(--ease);
+  }
+  .cad.is-link .cad__box {
+    width: 28px;
+    height: 28px;
+    left: -14px;
+    top: -14px;
+    border-color: var(--warm);
+    background: color-mix(in srgb, var(--warm) 12%, transparent);
+  }
+  .cad.is-link .cad__h,
+  .cad.is-link .cad__v {
+    background: var(--warm);
+  }
+  .cad.is-down .cad__box {
+    transform: scale(0.7) rotate(45deg);
+  }
+  .cad__xy {
+    position: absolute;
+    left: 16px;
+    top: 14px;
+    font-size: 0.62rem;
+    white-space: nowrap;
+    color: var(--ink-3);
+    background: color-mix(in srgb, var(--bg) 80%, transparent);
+    padding: 2px 5px;
+  }
+</style>

@@ -1,0 +1,668 @@
+---
+/* Interactive HVAC pre-sizing tools. All maths runs in the browser.
+   Duct: D = √(4·Q / (3600·π·v)), friction via Swamee–Jain (galvanised steel)
+   Water: q[m³/h] = P[kW] / (1.163 · ΔT)
+   Heat loss: Φ = U·A·ΔT + 0.34·qv·ΔT                                     */
+import TitleBlock from './TitleBlock.astro';
+import { ui, type Lang } from '../data/site';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang];
+const c = t.calc;
+const tabs = [
+  { id: 'duct', label: c.tabDuct, icon: 'M3 9h18M3 15h18M7 9v6M17 9v6' },
+  { id: 'water', label: c.tabWater, icon: 'M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z' },
+  { id: 'heat', label: c.tabHeat, icon: 'M4 21V10l8-6 8 6v11M9 21v-6h6v6' },
+  { id: 'units', label: c.tabUnits, icon: 'M7 7h13l-3-3M17 17H4l3 3' },
+];
+---
+
+<section class="section" id="calculs" data-section data-calc data-lang={lang}>
+  <div class="wrap">
+    <div data-duct-node><TitleBlock {...t.sections.calc} scale="1:1" /></div>
+    <p class="calc__intro" data-reveal>{c.intro}</p>
+
+    <div class="calc" data-reveal>
+      <div class="calc__tabs" role="tablist" aria-label={t.sections.calc.title}>
+        {tabs.map((tb, i) => (
+          <button role="tab" type="button" id={`tab-${tb.id}`} aria-controls={`panel-${tb.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-tab={tb.id}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d={tb.icon} /></svg>
+            <span>{tb.label}</span>
+          </button>
+        ))}
+      </div>
+
+      <!-- ===== Duct sizing ===== -->
+      <div class="calc__panel" role="tabpanel" id="panel-duct" aria-labelledby="tab-duct" data-panel="duct">
+        <div class="calc__in">
+          <label class="fld">
+            <span class="mono">{c.airflow}</span>
+            <span class="fld__row"><input type="number" min="10" max="50000" step="10" value="1200" data-in="q" inputmode="decimal" /><em>m³/h</em></span>
+            <input type="range" min="50" max="20000" step="50" value="1200" data-range="q" aria-label={c.airflow} />
+          </label>
+          <label class="fld">
+            <span class="mono">{c.velocity}</span>
+            <span class="fld__row"><input type="number" min="0.5" max="20" step="0.1" value="4" data-in="v" inputmode="decimal" /><em>m/s</em></span>
+            <input type="range" min="1" max="12" step="0.1" value="4" data-range="v" aria-label={c.velocity} />
+          </label>
+          <p class="calc__formula mono">{c.formula} : D = √(4·Q / (3600·π·v))</p>
+        </div>
+        <div class="calc__viz">
+          <svg viewBox="0 0 220 220" class="xsec" aria-hidden="true">
+            <circle cx="110" cy="110" r="100" class="xsec__ref" />
+            <circle cx="110" cy="110" r="60" class="xsec__std" data-xsec-std />
+            <circle cx="110" cy="110" r="55" class="xsec__calc" data-xsec-calc />
+            <circle cx="110" cy="110" r="40" class="xsec__flow" data-xsec-flow />
+            <path d="M10 110h200M110 10v200" class="xsec__axis" />
+          </svg>
+          <span class="xsec__lbl mono" data-out="stdLbl">Ø 315</span>
+        </div>
+        <dl class="calc__out" aria-live="polite">
+          <div><dt class="mono">{c.diameter}</dt><dd><b data-out="d">—</b> mm</dd></div>
+          <div class="hl"><dt class="mono">{c.standard}</dt><dd><b data-out="std">—</b> mm</dd></div>
+          <div><dt class="mono">{c.realVelocity}</dt><dd><b data-out="vr">—</b> m/s</dd></div>
+          <div><dt class="mono">{c.pressure}</dt><dd><b data-out="dp">—</b> Pa/m</dd></div>
+          <p class="calc__advice" data-out="advice" data-low={c.adviceLow} data-mid={c.adviceMid} data-high={c.adviceHigh}></p>
+        </dl>
+      </div>
+
+      <!-- ===== Water flow ===== -->
+      <div class="calc__panel" role="tabpanel" id="panel-water" aria-labelledby="tab-water" data-panel="water" hidden>
+        <div class="calc__in">
+          <label class="fld">
+            <span class="mono">{c.power}</span>
+            <span class="fld__row"><input type="number" min="0.1" max="10000" step="0.5" value="50" data-in="p" inputmode="decimal" /><em>kW</em></span>
+            <input type="range" min="1" max="500" step="1" value="50" data-range="p" aria-label={c.power} />
+          </label>
+          <label class="fld">
+            <span class="mono">{c.deltaT}</span>
+            <span class="fld__row"><input type="number" min="1" max="60" step="1" value="10" data-in="dt" inputmode="decimal" /><em>K</em></span>
+            <input type="range" min="2" max="40" step="1" value="10" data-range="dt" aria-label={c.deltaT} />
+          </label>
+          <p class="calc__formula mono">{c.formula} : q = P / (1,163 × ΔT)</p>
+        </div>
+        <div class="calc__viz">
+          <svg viewBox="0 0 220 220" class="pipe" aria-hidden="true">
+            <path d="M20 80h180M20 140h180" class="pipe__wall" />
+            <path d="M20 95h180M20 125h180" class="pipe__wall pipe__wall--in" />
+            <path d="M20 110h180" class="pipe__flow" data-pipe-flow />
+            <text x="110" y="60" text-anchor="middle" class="pipe__t warm" data-out="tHot">80 °C</text>
+            <text x="110" y="172" text-anchor="middle" class="pipe__t cool" data-out="tCold">70 °C</text>
+          </svg>
+        </div>
+        <dl class="calc__out" aria-live="polite">
+          <div class="hl"><dt class="mono">{c.waterFlow}</dt><dd><b data-out="qw">—</b> m³/h</dd></div>
+          <div><dt class="mono">{c.waterFlowLs}</dt><dd><b data-out="qls">—</b> l/s</dd></div>
+        </dl>
+      </div>
+
+      <!-- ===== Heat loss ===== -->
+      <div class="calc__panel" role="tabpanel" id="panel-heat" aria-labelledby="tab-heat" data-panel="heat" hidden>
+        <div class="calc__in calc__in--grid">
+          <label class="fld"><span class="mono">{c.area}</span><span class="fld__row"><input type="number" min="1" step="1" value="250" data-in="a" inputmode="decimal" /><em>m²</em></span></label>
+          <label class="fld"><span class="mono">{c.uValue}</span><span class="fld__row"><input type="number" min="0.05" step="0.05" value="0.6" data-in="u" inputmode="decimal" /><em>W/m²·K</em></span></label>
+          <label class="fld"><span class="mono">{c.airRate}</span><span class="fld__row"><input type="number" min="0" step="10" value="300" data-in="qv" inputmode="decimal" /><em>m³/h</em></span></label>
+          <label class="fld"><span class="mono">{c.tIn}</span><span class="fld__row"><input type="number" step="1" value="19" data-in="ti" inputmode="decimal" /><em>°C</em></span></label>
+          <label class="fld"><span class="mono">{c.tOut}</span><span class="fld__row"><input type="number" step="1" value="-7" data-in="te" inputmode="decimal" /><em>°C</em></span></label>
+          <p class="calc__formula mono">Φ = U·A·ΔT + 0,34·qv·ΔT</p>
+        </div>
+        <div class="calc__viz calc__viz--bar">
+          <div class="hbar" aria-hidden="true">
+            <span class="hbar__t" data-bar="tr"></span>
+            <span class="hbar__v" data-bar="ve"></span>
+          </div>
+          <div class="hbar__leg mono"><span><i class="warm-bg"></i>{c.transmission}</span><span><i class="cool-bg"></i>{c.ventilation}</span></div>
+        </div>
+        <dl class="calc__out" aria-live="polite">
+          <div><dt class="mono">{c.transmission}</dt><dd><b data-out="phT">—</b> W</dd></div>
+          <div><dt class="mono">{c.ventilation}</dt><dd><b data-out="phV">—</b> W</dd></div>
+          <div class="hl"><dt class="mono">{c.total}</dt><dd><b data-out="phi">—</b> kW</dd></div>
+        </dl>
+      </div>
+
+      <!-- ===== Units ===== -->
+      <div class="calc__panel" role="tabpanel" id="panel-units" aria-labelledby="tab-units" data-panel="units" hidden>
+        <div class="calc__in calc__in--grid">
+          <label class="fld"><span class="mono">{c.quantity}</span>
+            <select data-in="kind">
+              <option value="power">{c.qPower}</option>
+              <option value="flow">{c.qFlow}</option>
+              <option value="pressure">{c.qPressure}</option>
+            </select>
+          </label>
+          <label class="fld"><span class="mono">{c.value}</span><span class="fld__row"><input type="number" step="any" value="1000" data-in="val" inputmode="decimal" /></span></label>
+          <label class="fld"><span class="mono">{c.from}</span><select data-in="from"></select></label>
+        </div>
+        <ul class="units" data-out="units" aria-live="polite"></ul>
+      </div>
+      <p class="calc__disc mono">{c.disclaimer}</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-calc]');
+  if (root) {
+    const lang = root.dataset.lang === 'en' ? 'en-GB' : 'fr-FR';
+    const nf = (n: number, d = 0) => (isFinite(n) ? n.toLocaleString(lang, { maximumFractionDigits: d, minimumFractionDigits: d }) : '—');
+    const q = <T extends Element = HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const num = (k: string) => parseFloat(q<HTMLInputElement>(`[data-in="${k}"]`).value.replace(',', '.'));
+    const out = (k: string, v: string) => (q(`[data-out="${k}"]`).textContent = v);
+
+    /* --- tabs (arrow-key navigation, ARIA) --- */
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const select = (b: HTMLButtonElement) => {
+      tabs.forEach((x) => {
+        const on = x === b;
+        x.setAttribute('aria-selected', String(on));
+        x.tabIndex = on ? 0 : -1;
+        q(`[data-panel="${x.dataset.tab}"]`).hidden = !on;
+      });
+    };
+    tabs.forEach((b, i) => {
+      b.addEventListener('click', () => select(b));
+      b.addEventListener('keydown', (e) => {
+        const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!d) return;
+        e.preventDefault();
+        const n = tabs[(i + d + tabs.length) % tabs.length];
+        select(n);
+        n.focus();
+      });
+    });
+
+    /* --- sync number inputs with their sliders --- */
+    root.querySelectorAll<HTMLInputElement>('[data-range]').forEach((r) => {
+      const n = q<HTMLInputElement>(`[data-in="${r.dataset.range}"]`);
+      r.addEventListener('input', () => {
+        n.value = r.value;
+      });
+      n.addEventListener('input', () => {
+        r.value = n.value;
+      });
+    });
+    root.addEventListener('input', () => run());
+    root.addEventListener('change', () => run());
+
+    /* --- duct sizing --- */
+    const STD = [80, 100, 125, 160, 200, 250, 315, 355, 400, 450, 500, 560, 630, 710, 800, 900, 1000, 1120, 1250, 1400, 1600];
+    function duct() {
+      const Q = num('q');
+      const v = num('v');
+      if (!(Q > 0 && v > 0)) return;
+      const D = Math.sqrt((4 * Q) / (3600 * Math.PI * v)); // m
+      const std = STD.find((s) => s >= D * 1000) ?? STD[STD.length - 1];
+      const Ds = std / 1000;
+      const vr = Q / 3600 / ((Math.PI * Ds * Ds) / 4);
+      // Darcy–Weisbach, Swamee–Jain friction factor, galvanised steel ε = 0.15 mm
+      const Re = (vr * Ds) / 1.5e-5;
+      const lam = 0.25 / Math.pow(Math.log10(0.00015 / (3.7 * Ds) + 5.74 / Math.pow(Re, 0.9)), 2);
+      const dp = (lam / Ds) * ((1.2 * vr * vr) / 2);
+      out('d', nf(D * 1000));
+      out('std', nf(std));
+      out('stdLbl', `Ø ${std}`);
+      out('vr', nf(vr, 2));
+      out('dp', nf(dp, 2));
+      const adv = q('[data-out="advice"]');
+      const lvl = vr <= 3 ? 'low' : vr <= 6 ? 'mid' : 'high';
+      adv.textContent = adv.dataset[lvl] || '';
+      adv.className = `calc__advice is-${lvl}`;
+      // cross-section drawing (area-proportional, scaled to the largest standard size)
+      const sc = 96 / Math.sqrt(1600);
+      q('[data-xsec-std]').setAttribute('r', String(Math.sqrt(std) * sc));
+      q('[data-xsec-calc]').setAttribute('r', String(Math.sqrt(D * 1000) * sc));
+      const fl = q<SVGCircleElement>('[data-xsec-flow]');
+      fl.setAttribute('r', String(Math.sqrt(std) * sc * 0.7));
+      fl.style.animationDuration = `${Math.max(0.4, 6 / vr)}s`;
+    }
+
+    /* --- water flow --- */
+    function water() {
+      const P = num('p');
+      const dT = num('dt');
+      if (!(P > 0 && dT > 0)) return;
+      const qw = P / (1.163 * dT);
+      out('qw', nf(qw, 2));
+      out('qls', nf(qw / 3.6, 3));
+      out('tHot', `${nf(70 + dT)} °C`);
+      out('tCold', '70 °C');
+      q<SVGPathElement>('[data-pipe-flow]').style.animationDuration = `${Math.max(0.3, 3 / Math.max(0.2, qw / 5))}s`;
+    }
+
+    /* --- heat loss --- */
+    function heat() {
+      const A = num('a'), U = num('u'), qv = num('qv'), ti = num('ti'), te = num('te');
+      const dT = ti - te;
+      if (![A, U, qv, dT].every(isFinite)) return;
+      const pT = U * A * dT;
+      const pV = 0.34 * qv * dT;
+      const tot = pT + pV;
+      out('phT', nf(pT));
+      out('phV', nf(pV));
+      out('phi', nf(tot / 1000, 2));
+      const sh = tot > 0 ? pT / tot : 0.5;
+      q('[data-bar="tr"]').style.flexGrow = String(sh);
+      q('[data-bar="ve"]').style.flexGrow = String(1 - sh);
+    }
+
+    /* --- unit conversions --- */
+    const UNITS: Record<string, [string, number][]> = {
+      power: [['W', 1], ['kW', 1000], ['MW', 1e6], ['kcal/h', 1.163], ['BTU/h', 0.29307107], ['TR (tonne frig.)', 3516.85]],
+      flow: [['m³/h', 1], ['l/s', 3.6], ['m³/s', 3600], ['CFM', 1.699011]],
+      pressure: [['Pa', 1], ['mbar', 100], ['mmCE', 9.80665], ['inWG', 249.0889], ['kPa', 1000], ['bar', 100000]],
+    };
+    const kindSel = q<HTMLSelectElement>('[data-in="kind"]');
+    const fromSel = q<HTMLSelectElement>('[data-in="from"]');
+    const fillFrom = () => {
+      fromSel.innerHTML = UNITS[kindSel.value].map(([u], i) => `<option value="${i}">${u}</option>`).join('');
+    };
+    kindSel.addEventListener('change', fillFrom);
+    fillFrom();
+    function units() {
+      const list = UNITS[kindSel.value];
+      const val = num('val');
+      const from = Number(fromSel.value) || 0;
+      const base = val * list[from][1];
+      q('[data-out="units"]').innerHTML = list
+        .map(([u, f], i) => {
+          const x = base / f;
+          return `<li${i === from ? ' class="is-from"' : ''}><b>${nf(x, Math.abs(x) < 10 ? 4 : 2)}</b><span class="mono">${u}</span></li>`;
+        })
+        .join('');
+    }
+
+    function run() {
+      duct();
+      water();
+      heat();
+      units();
+    }
+    run();
+  }
+</script>
+
+<style>
+  .calc__intro {
+    max-width: 62ch;
+    color: var(--ink-2);
+    margin-bottom: 28px;
+  }
+  .calc {
+    border: 1px solid var(--line-2);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+  }
+  .calc__tabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid var(--line-2);
+  }
+  .calc__tabs button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 56px;
+    padding: 0 12px;
+    background: transparent;
+    border: 0;
+    border-right: 1px solid var(--line-2);
+    cursor: pointer;
+    color: var(--ink-2);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    position: relative;
+    transition: color 0.2s, background-color 0.2s;
+  }
+  .calc__tabs button:last-child {
+    border-right: 0;
+  }
+  .calc__tabs button svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    flex: none;
+  }
+  .calc__tabs button::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    background: var(--thermal);
+    transform: scaleX(0);
+    transition: transform 0.4s var(--ease);
+  }
+  .calc__tabs button[aria-selected='true'] {
+    color: var(--ink);
+    background: var(--surface);
+  }
+  .calc__tabs button[aria-selected='true']::after {
+    transform: scaleX(1);
+  }
+  .calc__panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.8fr) minmax(0, 1fr);
+    gap: 28px;
+    padding: clamp(20px, 3vw, 36px);
+    align-items: center;
+  }
+  .calc__panel[hidden] {
+    display: none;
+  }
+  .calc__in {
+    display: grid;
+    gap: 20px;
+  }
+  .calc__in--grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .fld {
+    display: grid;
+    gap: 8px;
+  }
+  .fld__row {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--line-2);
+    background: var(--bg-2);
+    border-radius: var(--radius);
+  }
+  .fld__row:focus-within {
+    border-color: var(--cool);
+  }
+  .fld input[type='number'],
+  .fld select {
+    flex: 1;
+    min-width: 0;
+    min-height: 46px;
+    padding: 0 12px;
+    font: 500 1.15rem/1 var(--font-display);
+    font-stretch: 105%;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    outline: none;
+  }
+  .fld select {
+    border: 1px solid var(--line-2);
+    background: var(--bg-2);
+    border-radius: var(--radius);
+    font-size: 1rem;
+  }
+  .fld select:focus-visible {
+    outline: 2px solid var(--focus);
+  }
+  .fld em {
+    font-style: normal;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--ink-3);
+    padding: 0 12px;
+  }
+  .fld input[type='range'] {
+    width: 100%;
+    accent-color: var(--warm);
+    height: 24px;
+  }
+  .calc__formula {
+    grid-column: 1 / -1;
+    color: var(--ink-3);
+    text-transform: none;
+  }
+  .calc__viz {
+    position: relative;
+    display: grid;
+    place-items: center;
+  }
+  .xsec,
+  .pipe {
+    width: 100%;
+    max-width: 240px;
+    overflow: visible;
+  }
+  .xsec__ref {
+    fill: none;
+    stroke: var(--line);
+    stroke-dasharray: 2 6;
+  }
+  .xsec__axis {
+    stroke: var(--line-2);
+    stroke-dasharray: 10 4 2 4;
+    fill: none;
+  }
+  .xsec__std {
+    fill: color-mix(in srgb, var(--cool) 14%, transparent);
+    stroke: var(--cool);
+    stroke-width: 3;
+    transition: r 0.5s var(--ease);
+  }
+  .xsec__calc {
+    fill: none;
+    stroke: var(--warm);
+    stroke-width: 1.5;
+    stroke-dasharray: 5 5;
+    transition: r 0.5s var(--ease);
+  }
+  .xsec__flow {
+    fill: none;
+    stroke: var(--cool-2);
+    stroke-width: 2;
+    stroke-dasharray: 2 12;
+    stroke-linecap: round;
+    transform-origin: 110px 110px;
+    animation: xspin 2s linear infinite;
+    transition: r 0.5s var(--ease);
+  }
+  @keyframes xspin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .xsec__lbl {
+    position: absolute;
+    bottom: -4px;
+    color: var(--cool);
+  }
+  .pipe__wall {
+    stroke: var(--ink-2);
+    stroke-width: 2;
+    fill: none;
+  }
+  .pipe__wall--in {
+    stroke: var(--line-2);
+    stroke-width: 1;
+  }
+  .pipe__flow {
+    stroke: var(--warm);
+    stroke-width: 22;
+    stroke-dasharray: 6 18;
+    fill: none;
+    opacity: 0.55;
+    animation: pflow 1s linear infinite;
+  }
+  @keyframes pflow {
+    to {
+      stroke-dashoffset: -24;
+    }
+  }
+  .pipe__t {
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+  .pipe__t.warm {
+    fill: var(--warm);
+  }
+  .pipe__t.cool {
+    fill: var(--cool);
+  }
+  .calc__out {
+    margin: 0;
+    display: grid;
+    gap: 2px;
+    border-left: 1px solid var(--line-2);
+    padding-left: 24px;
+  }
+  .calc__out > div {
+    display: grid;
+    gap: 2px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .calc__out dd {
+    margin: 0;
+    color: var(--ink-2);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+  .calc__out b {
+    font-family: var(--font-display);
+    font-stretch: 115%;
+    font-size: 1.7rem;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    margin-right: 4px;
+  }
+  .calc__out .hl b {
+    font-size: 2.4rem;
+    background: var(--thermal);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .calc__advice {
+    padding-top: 10px;
+    font-size: 0.92rem;
+    padding-left: 12px;
+    border-left: 3px solid var(--ink-3);
+  }
+  .calc__advice.is-low {
+    border-color: var(--cool);
+  }
+  .calc__advice.is-mid {
+    border-color: #a78bfa;
+  }
+  .calc__advice.is-high {
+    border-color: var(--warm);
+    color: var(--warm);
+  }
+  .calc__viz--bar {
+    align-content: center;
+    gap: 12px;
+    width: 100%;
+  }
+  .hbar {
+    display: flex;
+    width: 100%;
+    height: 22px;
+    border: 1px solid var(--line-2);
+    overflow: hidden;
+  }
+  .hbar span {
+    flex: 1 1 0;
+    transition: flex-grow 0.6s var(--ease);
+  }
+  .hbar__t,
+  .warm-bg {
+    background: var(--warm);
+  }
+  .hbar__v,
+  .cool-bg {
+    background: var(--cool);
+  }
+  .hbar__leg {
+    display: grid;
+    gap: 6px;
+    justify-self: start;
+  }
+  .hbar__leg span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hbar__leg i {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+  }
+  .units {
+    grid-column: 2 / -1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--line-2);
+    border-left: 1px solid var(--line-2);
+  }
+  .units :global(li) {
+    display: grid;
+    gap: 2px;
+    padding: 14px;
+    border-right: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+  }
+  .units :global(li b) {
+    font-family: var(--font-display);
+    font-stretch: 110%;
+    font-size: 1.25rem;
+    overflow-wrap: anywhere;
+  }
+  .units :global(li.is-from) {
+    background: color-mix(in srgb, var(--warm) 12%, transparent);
+  }
+  .calc__disc {
+    padding: 12px 20px;
+    border-top: 1px solid var(--line-2);
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+  @media (max-width: 1000px) {
+    .calc__panel {
+      grid-template-columns: 1fr 1fr;
+    }
+    .calc__in {
+      grid-column: 1 / -1;
+    }
+    .units {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 640px) {
+    .calc__tabs {
+      grid-template-columns: 1fr 1fr;
+    }
+    .calc__tabs button:nth-child(2) {
+      border-right: 0;
+    }
+    .calc__tabs button:nth-child(-n + 2) {
+      border-bottom: 1px solid var(--line-2);
+    }
+    .calc__panel {
+      grid-template-columns: 1fr;
+    }
+    .calc__in--grid {
+      grid-template-columns: 1fr;
+    }
+    .calc__out {
+      border-left: 0;
+      padding-left: 0;
+    }
+    .calc__viz {
+      max-width: 200px;
+      margin-inline: auto;
+    }
+    .calc__viz--bar {
+      max-width: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .xsec__flow,
+    .pipe__flow {
+      animation: none;
+    }
+  }
+</style>

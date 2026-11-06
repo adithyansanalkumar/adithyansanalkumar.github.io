@@ -46,19 +46,24 @@
         "sub": "Projets & études"
       },
       "path": {
-        "n": "04",
+        "n": "05",
         "title": "Parcours",
         "sub": "Expérience & formation"
       },
       "tools": {
-        "n": "05",
+        "n": "06",
         "title": "Outils",
         "sub": "Logiciels"
       },
       "contact": {
-        "n": "06",
+        "n": "07",
         "title": "Contact",
         "sub": "Travaillons ensemble"
+      },
+      "calc": {
+        "n": "04",
+        "title": "Calculs",
+        "sub": "Outils de pré-dimensionnement"
       }
     },
     "table": {
@@ -134,7 +139,57 @@
       "Bilans thermiques",
       "Schémas de principe",
       "pyRevit"
-    ]
+    ],
+    "calc": {
+      "intro": "Quelques outils que j’utilise au quotidien pour un pré-dimensionnement rapide. Modifiez les valeurs : les résultats se mettent à jour en direct.",
+      "tabDuct": "Gaine aéraulique",
+      "tabWater": "Débit hydraulique",
+      "tabHeat": "Déperditions",
+      "tabUnits": "Conversions",
+      "airflow": "Débit d’air",
+      "velocity": "Vitesse visée",
+      "diameter": "Diamètre calculé",
+      "standard": "Diamètre normalisé",
+      "realVelocity": "Vitesse réelle",
+      "pressure": "Perte de charge linéique",
+      "adviceLow": "Vitesse faible : réseau silencieux, adapté aux gaines terminales.",
+      "adviceMid": "Vitesse courante pour un réseau principal tertiaire.",
+      "adviceHigh": "Vitesse élevée : risque de bruit, vérifier l’acoustique.",
+      "power": "Puissance",
+      "deltaT": "Écart de température (ΔT)",
+      "waterFlow": "Débit d’eau",
+      "waterFlowLs": "Débit d’eau (l/s)",
+      "area": "Surface déperditive",
+      "uValue": "U moyen des parois",
+      "airRate": "Débit de renouvellement d’air",
+      "tIn": "Température intérieure",
+      "tOut": "Température extérieure de base",
+      "transmission": "Par les parois",
+      "ventilation": "Par renouvellement d’air",
+      "total": "Puissance de chauffage",
+      "from": "De",
+      "to": "Vers",
+      "value": "Valeur",
+      "quantity": "Grandeur",
+      "qPower": "Puissance",
+      "qFlow": "Débit d’air",
+      "qPressure": "Pression",
+      "disclaimer": "Résultats indicatifs pour du pré-dimensionnement — ne remplacent pas une note de calcul.",
+      "formula": "Formule"
+    },
+    "cmd": {
+      "button": "Ligne de commande",
+      "placeholder": "Tapez une commande… (ex. PROJETS, CV, THERMIQUE)",
+      "hint": "Entrée pour exécuter · Échap pour fermer · Ctrl+K pour ouvrir",
+      "noMatch": "Commande inconnue. Tapez AIDE.",
+      "prompt": "Commande :"
+    },
+    "thermal": {
+      "toggle": "Vision thermique",
+      "on": "Vision thermique activée",
+      "off": "Vision thermique désactivée",
+      "scale": "Échelle"
+    }
   },
   "en": {
     "htmlLang": "en",
@@ -183,19 +238,24 @@
         "sub": "Projects & studies"
       },
       "path": {
-        "n": "04",
+        "n": "05",
         "title": "Career",
         "sub": "Experience & education"
       },
       "tools": {
-        "n": "05",
+        "n": "06",
         "title": "Tools",
         "sub": "Software"
       },
       "contact": {
-        "n": "06",
+        "n": "07",
         "title": "Contact",
         "sub": "Let’s work together"
+      },
+      "calc": {
+        "n": "04",
+        "title": "Calcs",
+        "sub": "Pre-sizing tools"
       }
     },
     "table": {
@@ -271,6 +331,56 @@
       "Heat loads",
       "Schematics",
       "pyRevit"
-    ]
+    ],
+    "calc": {
+      "intro": "A few tools I use every day for quick pre-sizing. Change the values: results update live.",
+      "tabDuct": "Duct sizing",
+      "tabWater": "Water flow",
+      "tabHeat": "Heat loss",
+      "tabUnits": "Conversions",
+      "airflow": "Airflow",
+      "velocity": "Target velocity",
+      "diameter": "Calculated diameter",
+      "standard": "Standard diameter",
+      "realVelocity": "Actual velocity",
+      "pressure": "Friction loss",
+      "adviceLow": "Low velocity: quiet network, suited to branch ducts.",
+      "adviceMid": "Typical velocity for a commercial main duct.",
+      "adviceHigh": "High velocity: noise risk, check acoustics.",
+      "power": "Power",
+      "deltaT": "Temperature difference (ΔT)",
+      "waterFlow": "Water flow",
+      "waterFlowLs": "Water flow (l/s)",
+      "area": "Heat-loss area",
+      "uValue": "Average U-value",
+      "airRate": "Air change flow",
+      "tIn": "Indoor temperature",
+      "tOut": "Outdoor design temperature",
+      "transmission": "Through the envelope",
+      "ventilation": "Through ventilation",
+      "total": "Heating load",
+      "from": "From",
+      "to": "To",
+      "value": "Value",
+      "quantity": "Quantity",
+      "qPower": "Power",
+      "qFlow": "Airflow",
+      "qPressure": "Pressure",
+      "disclaimer": "Indicative results for pre-sizing — not a substitute for a full calculation.",
+      "formula": "Formula"
+    },
+    "cmd": {
+      "button": "Command line",
+      "placeholder": "Type a command… (e.g. WORK, CV, THERMAL)",
+      "hint": "Enter to run · Esc to close · Ctrl+K to open",
+      "noMatch": "Unknown command. Type HELP.",
+      "prompt": "Command:"
+    },
+    "thermal": {
+      "toggle": "Thermal vision",
+      "on": "Thermal vision on",
+      "off": "Thermal vision off",
+      "scale": "Scale"
+    }
   }
 }

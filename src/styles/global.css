@@ -149,6 +149,10 @@ ul {
   outline-offset: 3px;
   border-radius: 2px;
 }
+/* sections/main receive focus programmatically after in-page jumps: no outline */
+[tabindex='-1']:focus {
+  outline: none;
+}
 ::selection {
   background: var(--cool);
   color: #fff;

@@ -2,6 +2,7 @@
 import TitleBlock from './TitleBlock.astro';
 import HeroDrawing from './HeroDrawing.astro';
 import ProjectCard from './ProjectCard.astro';
+import Calculators from './Calculators.astro';
 import { ui, profile, timeline, expertise, tools, stats, type Lang } from '../data/site';
 import { projects, categories, type Category } from '../data/projects';
 
@@ -167,6 +168,9 @@ const marquee: string[] = t.marquee || [];
       <p class="sr-only" aria-live="polite" data-filter-status></p>
     </div>
   </section>
+
+  <!-- ===== HVAC calculators ===== -->
+  <Calculators lang={lang} />
 
   <!-- ===== Career ===== -->
   <section class="section" id="parcours" data-section>

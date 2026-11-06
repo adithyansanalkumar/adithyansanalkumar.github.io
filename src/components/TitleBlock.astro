@@ -8,7 +8,7 @@ const { n, title, sub, scale = '1:50' } = Astro.props;
   <div class="tb__n"><span>N°</span><strong>{n}</strong></div>
   <div class="tb__title">
     <span class="mono">{sub}</span>
-    <h2>{title}</h2>
+    <h2><span class="sr-only">{title}</span><span aria-hidden="true" data-scramble>{title}</span></h2>
   </div>
   <div class="tb__meta" aria-hidden="true">
     <span>Lot · CVC</span>

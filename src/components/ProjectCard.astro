@@ -48,7 +48,9 @@ const num = String(index + 1).padStart(2, '0');
     border: 1px solid var(--line-2);
     background: color-mix(in srgb, var(--surface) 70%, transparent);
     position: relative;
-    transition: transform 0.5s var(--ease), border-color 0.3s, box-shadow 0.5s var(--ease);
+    transition: transform 0.25s var(--ease), border-color 0.3s, box-shadow 0.5s var(--ease);
+    transform-style: preserve-3d;
+    will-change: transform;
   }
   .card__a::before {
     /* thermal edge that appears on hover */
@@ -71,6 +73,20 @@ const num = String(index + 1).padStart(2, '0');
   }
   .card__a:hover::before,
   .card__a:focus-visible::before {
+    opacity: 1;
+  }
+  .card__a::after {
+    /* glare that follows the mouse */
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(420px circle at var(--gx, 50%) var(--gy, 0%), rgba(255, 255, 255, 0.1), transparent 45%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    z-index: 2;
+  }
+  .card__a:hover::after {
     opacity: 1;
   }
   .card__media {

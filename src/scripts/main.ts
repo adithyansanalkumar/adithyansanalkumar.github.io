@@ -409,6 +409,56 @@ $$<HTMLButtonElement>('[data-copy]').forEach((btn) => {
   });
 });
 
+/* ---------- Section titles "decode" like a plotter when they appear ---------- */
+if (!reduce && 'IntersectionObserver' in window) {
+  const GLYPHS = '▚▞#/\\_-=+0123456789ABCDEFΦΔ';
+  const so = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        so.unobserve(en.target);
+        const el = en.target as HTMLElement;
+        const final = el.textContent || '';
+        const start = performance.now();
+        const dur = 900;
+        const tick = (now: number) => {
+          const p = Math.min(1, (now - start) / dur);
+          const done = Math.floor(final.length * p);
+          el.textContent =
+            final.slice(0, done) +
+            final
+              .slice(done)
+              .split('')
+              .map((ch) => (ch === ' ' ? ' ' : GLYPHS[(Math.random() * GLYPHS.length) | 0]))
+              .join('');
+          if (p < 1) requestAnimationFrame(tick);
+          else el.textContent = final;
+        };
+        requestAnimationFrame(tick);
+      });
+    },
+    { threshold: 0.6 },
+  );
+  $$('[data-scramble]').forEach((el) => so.observe(el));
+}
+
+/* ---------- 3D tilt + glare on project cards (mouse only) ---------- */
+if (!reduce && matchMedia('(pointer: fine)').matches) {
+  $$<HTMLAnchorElement>('.card__a').forEach((card) => {
+    card.addEventListener('pointermove', (e) => {
+      const r = card.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      card.style.transform = `perspective(900px) rotateX(${(-py * 7).toFixed(2)}deg) rotateY(${(px * 9).toFixed(2)}deg) translateY(-6px)`;
+      card.style.setProperty('--gx', `${(px + 0.5) * 100}%`);
+      card.style.setProperty('--gy', `${(py + 0.5) * 100}%`);
+    });
+    card.addEventListener('pointerleave', () => {
+      card.style.transform = '';
+    });
+  });
+}
+
 /* ---------- Contact form (Web3Forms) ---------- */
 const cform = $<HTMLFormElement>('[data-cform]');
 if (cform) {

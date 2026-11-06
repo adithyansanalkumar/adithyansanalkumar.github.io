@@ -887,6 +887,32 @@
                           "required": false
                         }
                       ]
+                    },
+                    {
+                      "name": "calc",
+                      "label": "Calc",
+                      "widget": "object",
+                      "collapsed": true,
+                      "fields": [
+                        {
+                          "name": "n",
+                          "label": "Numéro",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "title",
+                          "label": "Titre",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "sub",
+                          "label": "Sous-titre",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
                     }
                   ]
                 },
@@ -1255,6 +1281,294 @@
                     "label": "Élément",
                     "widget": "string"
                   }
+                },
+                {
+                  "name": "calc",
+                  "label": "Calc",
+                  "widget": "object",
+                  "collapsed": true,
+                  "fields": [
+                    {
+                      "name": "intro",
+                      "label": "Texte de présentation",
+                      "widget": "text",
+                      "required": false
+                    },
+                    {
+                      "name": "tabDuct",
+                      "label": "Tab Duct",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "tabWater",
+                      "label": "Tab Water",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "tabHeat",
+                      "label": "Tab Heat",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "tabUnits",
+                      "label": "Tab Units",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "airflow",
+                      "label": "Airflow",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "velocity",
+                      "label": "Velocity",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "diameter",
+                      "label": "Diameter",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "standard",
+                      "label": "Standard",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "realVelocity",
+                      "label": "Real Velocity",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "pressure",
+                      "label": "Pressure",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "adviceLow",
+                      "label": "Advice Low",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "adviceMid",
+                      "label": "Advice Mid",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "adviceHigh",
+                      "label": "Advice High",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "power",
+                      "label": "Power",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "deltaT",
+                      "label": "Delta T",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "waterFlow",
+                      "label": "Water Flow",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "waterFlowLs",
+                      "label": "Water Flow Ls",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "area",
+                      "label": "Area",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "uValue",
+                      "label": "U Value",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "airRate",
+                      "label": "Air Rate",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "tIn",
+                      "label": "T In",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "tOut",
+                      "label": "T Out",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "transmission",
+                      "label": "Transmission",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "ventilation",
+                      "label": "Ventilation",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "total",
+                      "label": "Total",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "from",
+                      "label": "From",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "to",
+                      "label": "To",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "value",
+                      "label": "Value",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "quantity",
+                      "label": "Quantity",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "qPower",
+                      "label": "Q Power",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "qFlow",
+                      "label": "Q Flow",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "qPressure",
+                      "label": "Q Pressure",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "disclaimer",
+                      "label": "Disclaimer",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "formula",
+                      "label": "Formula",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "cmd",
+                  "label": "Cmd",
+                  "widget": "object",
+                  "collapsed": true,
+                  "fields": [
+                    {
+                      "name": "button",
+                      "label": "Button",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "placeholder",
+                      "label": "Placeholder",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "hint",
+                      "label": "Hint",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "noMatch",
+                      "label": "No Match",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "prompt",
+                      "label": "Prompt",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "thermal",
+                  "label": "Thermal",
+                  "widget": "object",
+                  "collapsed": true,
+                  "fields": [
+                    {
+                      "name": "toggle",
+                      "label": "Toggle",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "on",
+                      "label": "On",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "off",
+                      "label": "Off",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "scale",
+                      "label": "Scale",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
                 }
               ]
             },
@@ -1590,6 +1904,32 @@
                           "required": false
                         }
                       ]
+                    },
+                    {
+                      "name": "calc",
+                      "label": "Calc",
+                      "widget": "object",
+                      "collapsed": true,
+                      "fields": [
+                        {
+                          "name": "n",
+                          "label": "Numéro",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "title",
+                          "label": "Titre",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "sub",
+                          "label": "Sous-titre",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
                     }
                   ]
                 },
@@ -1958,6 +2298,294 @@
                     "label": "Élément",
                     "widget": "string"
                   }
+                },
+                {
+                  "name": "calc",
+                  "label": "Calc",
+                  "widget": "object",
+                  "collapsed": true,
+                  "fields": [
+                    {
+                      "name": "intro",
+                      "label": "Texte de présentation",
+                      "widget": "text",
+                      "required": false
+                    },
+                    {
+                      "name": "tabDuct",
+                      "label": "Tab Duct",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "tabWater",
+                      "label": "Tab Water",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "tabHeat",
+                      "label": "Tab Heat",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "tabUnits",
+                      "label": "Tab Units",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "airflow",
+                      "label": "Airflow",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "velocity",
+                      "label": "Velocity",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "diameter",
+                      "label": "Diameter",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "standard",
+                      "label": "Standard",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "realVelocity",
+                      "label": "Real Velocity",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "pressure",
+                      "label": "Pressure",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "adviceLow",
+                      "label": "Advice Low",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "adviceMid",
+                      "label": "Advice Mid",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "adviceHigh",
+                      "label": "Advice High",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "power",
+                      "label": "Power",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "deltaT",
+                      "label": "Delta T",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "waterFlow",
+                      "label": "Water Flow",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "waterFlowLs",
+                      "label": "Water Flow Ls",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "area",
+                      "label": "Area",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "uValue",
+                      "label": "U Value",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "airRate",
+                      "label": "Air Rate",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "tIn",
+                      "label": "T In",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "tOut",
+                      "label": "T Out",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "transmission",
+                      "label": "Transmission",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "ventilation",
+                      "label": "Ventilation",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "total",
+                      "label": "Total",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "from",
+                      "label": "From",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "to",
+                      "label": "To",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "value",
+                      "label": "Value",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "quantity",
+                      "label": "Quantity",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "qPower",
+                      "label": "Q Power",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "qFlow",
+                      "label": "Q Flow",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "qPressure",
+                      "label": "Q Pressure",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "disclaimer",
+                      "label": "Disclaimer",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "formula",
+                      "label": "Formula",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "cmd",
+                  "label": "Cmd",
+                  "widget": "object",
+                  "collapsed": true,
+                  "fields": [
+                    {
+                      "name": "button",
+                      "label": "Button",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "placeholder",
+                      "label": "Placeholder",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "hint",
+                      "label": "Hint",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "noMatch",
+                      "label": "No Match",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "prompt",
+                      "label": "Prompt",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "thermal",
+                  "label": "Thermal",
+                  "widget": "object",
+                  "collapsed": true,
+                  "fields": [
+                    {
+                      "name": "toggle",
+                      "label": "Toggle",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "on",
+                      "label": "On",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "off",
+                      "label": "Off",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "scale",
+                      "label": "Scale",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
                 }
               ]
             }
